@@ -6,13 +6,12 @@ from services.database import get_connection, init_db
 from agents.verification_agent import add_evidence
 
 
-def create_test_incident():
+def create_test_incident(description):
     """Crea un incidente temporaneo per il test."""
 
     unique_location = f"zona_test_{uuid.uuid4().hex[:8]}"
     now = datetime.now(timezone.utc).isoformat()
 
-    # Inizializziamo le tabelle prima di inserire l'incidente.
     init_db()
 
     connection = get_connection()
@@ -34,7 +33,7 @@ def create_test_incident():
             """,
             (
                 "environment",
-                "Test di verifica incendio",
+                description,
                 unique_location,
                 "pending",
                 "unverified",
@@ -51,55 +50,124 @@ def create_test_incident():
         connection.close()
 
 
-def main():
-    incident_id = create_test_incident()
-
-    print(f"\nIncidente di test creato: {incident_id}")
+def test_verification_classification():
+    print("\n=== TEST VERIFICATION AGENT ===")
 
     # TEST 1: una fonte indipendente
-    result = add_evidence(
-        incident_id=incident_id,
-        source_name="Test News",
-        source_url="https://test-news.example/articolo",
-        description="La fonte riporta un incendio nella zona indicata.",
-        evidence_type="independent_confirmation"
+    incident_id = create_test_incident(
+        "Test conferma parziale"
     )
 
-    print("\nDopo la prima evidenza:")
-    print(result)
+    result = add_evidence(
+        incident_id,
+        "Test News",
+        "https://test-news.example/articolo",
+        "La fonte riporta un incendio.",
+        "independent_confirmation"
+    )
 
     assert result["verification_status"] == "partially_confirmed"
+    print("TEST 1 SUPERATO: una fonte indipendente")
 
     # TEST 2: una seconda fonte indipendente
     result = add_evidence(
-        incident_id=incident_id,
-        source_name="Seconda Test News",
-        source_url="https://second-test-news.example/articolo",
-        description="Una seconda fonte riporta lo stesso incendio.",
-        evidence_type="independent_confirmation"
+        incident_id,
+        "Seconda Test News",
+        "https://second-test-news.example/articolo",
+        "Una seconda fonte riporta lo stesso incendio.",
+        "independent_confirmation"
     )
-
-    print("\nDopo la seconda evidenza:")
-    print(result)
 
     assert result["verification_status"] == "confirmed"
+    print("TEST 2 SUPERATO: due fonti indipendenti")
 
-    # TEST 3: una contraddizione ufficiale
+    # TEST 3: una contraddizione ufficiale insieme alle conferme
     result = add_evidence(
-        incident_id=incident_id,
-        source_name="Test Ente",
-        source_url="https://ente.example/comunicazione",
-        description="La fonte ufficiale dichiara che non risulta alcun incendio.",
-        evidence_type="official_contradiction"
+        incident_id,
+        "Test Ente",
+        "https://ente.example/comunicazione",
+        "La fonte ufficiale dichiara che non risulta alcun incendio.",
+        "official_contradiction"
     )
 
-    print("\nDopo la contraddizione:")
-    print(result)
-
     assert result["verification_status"] == "conflicting"
+    print("TEST 3 SUPERATO: conferme e contraddizione")
 
-    print("\nTEST VERIFICATION AGENT SUPERATO!")
+    # TEST 4: una sola contraddizione indipendente
+    incident_id = create_test_incident(
+        "Test contestazione indipendente"
+    )
+
+    result = add_evidence(
+        incident_id,
+        "Fonte indipendente",
+        "https://fonte.example/articolo",
+        "La fonte sostiene che l'incidente non sia avvenuto.",
+        "independent_contradiction"
+    )
+
+    assert result["verification_status"] == "contested"
+    print("TEST 4 SUPERATO: contestazione indipendente")
+
+    # TEST 5: una sola contraddizione ufficiale
+    incident_id = create_test_incident(
+        "Test contraddizione ufficiale"
+    )
+
+    result = add_evidence(
+        incident_id,
+        "Ente ufficiale",
+        "https://ente-ufficiale.example/comunicato",
+        "L'ente dichiara ufficialmente che l'evento non è avvenuto.",
+        "official_contradiction"
+    )
+
+    assert result["verification_status"] == "contradicted"
+    print("TEST 5 SUPERATO: contraddizione ufficiale")
+
+    # TEST 6: due articoli dello stesso dominio
+    incident_id = create_test_incident(
+        "Test deduplicazione fonti"
+    )
+
+    add_evidence(
+        incident_id,
+        "News",
+        "https://news.example/articolo-1",
+        "Prima notizia sull'incidente.",
+        "independent_confirmation"
+    )
+
+    result = add_evidence(
+        incident_id,
+        "News",
+        "https://www.news.example/articolo-2",
+        "Seconda notizia sull'incidente.",
+        "independent_confirmation"
+    )
+
+    assert result["independent_sources"] == 1
+    assert result["verification_status"] == "partially_confirmed"
+    print("TEST 6 SUPERATO: deduplicazione per dominio")
+
+    # TEST 7: il contesto non conferma l'incidente
+    incident_id = create_test_incident(
+        "Test evidenza contestuale"
+    )
+
+    result = add_evidence(
+        incident_id,
+        "Protezione Civile",
+        "https://protezione-civile.example/allerta",
+        "Allerta meteo presente nella zona.",
+        "context"
+    )
+
+    assert result["verification_status"] == "unverified"
+    print("TEST 7 SUPERATO: il contesto non conferma l'evento")
+
+    print("\nTUTTI I TEST VERIFICATION AGENT SUPERATI!")
 
 
 if __name__ == "__main__":
-    main()
+    test_verification_classification()

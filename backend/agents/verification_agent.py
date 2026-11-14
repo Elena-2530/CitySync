@@ -2,6 +2,8 @@
 from datetime import datetime, timezone
 import json
 from urllib.parse import urlparse
+from zoneinfo import ZoneInfo
+import re
 
 from services.database import get_connection
 
@@ -13,6 +15,30 @@ EVIDENCE_TYPES = {
     "official_contradiction",
     "independent_contradiction",
     "context"
+}
+
+
+ITALIAN_MONTHS = {
+    "gennaio": 1,
+    "febbraio": 2,
+    "marzo": 3,
+    "aprile": 4,
+    "maggio": 5,
+    "giugno": 6,
+    "luglio": 7,
+    "agosto": 8,
+    "settembre": 9,
+    "ottobre": 10,
+    "novembre": 11,
+    "dicembre": 12
+}
+
+
+NAPLES_LOCATIONS = {
+    "napoli", "bagnoli", "fuorigrotta", "chiaia",
+    "vomero", "posillipo", "scampia", "pianura",
+    "secondigliano", "forcella", "sanita",
+    "spaccanapoli", "capodichino"
 }
 
 
@@ -37,12 +63,19 @@ def evaluate_incident(incident_id):
     """
     Valuta le evidenze associate a un incidente
     e aggiorna il suo stato di verifica.
+
+    Gli stati possibili sono:
+    - unverified
+    - partially_confirmed
+    - confirmed
+    - contested
+    - contradicted
+    - conflicting
     """
 
     connection = get_connection()
 
     try:
-        # Verifichiamo che l'incidente esista
         incident = connection.execute(
             """
             SELECT id
@@ -57,7 +90,6 @@ def evaluate_incident(incident_id):
                 f"Incidente {incident_id} non trovato."
             )
 
-        # Recuperiamo tutte le evidenze
         evidences = connection.execute(
             """
             SELECT *
@@ -67,7 +99,6 @@ def evaluate_incident(incident_id):
             (incident_id,)
         ).fetchall()
 
-        # Separiamo le evidenze per tipologia
         official_confirmations = [
             e for e in evidences
             if e["evidence_type"] == "official_confirmation"
@@ -88,13 +119,12 @@ def evaluate_incident(incident_id):
             if e["evidence_type"] == "independent_contradiction"
         ]
 
-        # Contiamo le fonti indipendenti, non gli articoli
+        # Contiamo i domini distinti delle conferme indipendenti.
         independent_sources = {
             get_source_key(e)
             for e in independent_confirmations
         }
 
-        # Valutazione preliminare
         has_confirmation = (
             bool(official_confirmations)
             or bool(independent_sources)
@@ -105,25 +135,34 @@ def evaluate_incident(incident_id):
             or bool(independent_contradictions)
         )
 
+        # Prima controlliamo se esistono evidenze di segno opposto.
         if has_confirmation and has_contradiction:
             status = "conflicting"
 
+        # Una contraddizione ufficiale senza conferme.
         elif official_contradictions:
             status = "contradicted"
 
+        # Una contestazione indipendente senza conferme.
+        elif independent_contradictions:
+            status = "contested"
+
+        # Una conferma ufficiale.
         elif official_confirmations:
             status = "confirmed"
 
+        # Almeno due domini indipendenti confermano l'evento.
         elif len(independent_sources) >= 2:
             status = "confirmed"
 
+        # Un solo dominio indipendente conferma l'evento.
         elif len(independent_sources) == 1:
             status = "partially_confirmed"
 
+        # Non ci sono evidenze sufficienti.
         else:
             status = "unverified"
 
-        # Aggiorniamo lo stato dell'incidente
         now = datetime.now(timezone.utc).isoformat()
 
         connection.execute(
@@ -171,16 +210,15 @@ def add_evidence(
             f"Tipo di evidenza non valido: {evidence_type}"
         )
 
-    if not source_name.strip():
+    if not source_name or not source_name.strip():
         raise ValueError("Il nome della fonte è obbligatorio.")
 
-    if not description.strip():
+    if not description or not description.strip():
         raise ValueError("La descrizione è obbligatoria.")
 
     connection = get_connection()
 
     try:
-        # Verifichiamo che l'incidente esista
         incident = connection.execute(
             """
             SELECT id
@@ -195,7 +233,6 @@ def add_evidence(
                 f"Incidente {incident_id} non trovato."
             )
 
-        # Evitiamo di inserire due volte la stessa evidenza
         existing = connection.execute(
             """
             SELECT id
@@ -218,7 +255,6 @@ def add_evidence(
         if existing:
             return evaluate_incident(incident_id)
 
-        # Inseriamo la nuova evidenza
         now = datetime.now(timezone.utc).isoformat()
 
         connection.execute(
@@ -249,33 +285,9 @@ def add_evidence(
 
     finally:
         connection.close()
-    # Rivalutiamo l'incidente dopo il salvataggio
+
     return evaluate_incident(incident_id)
-from zoneinfo import ZoneInfo
-import re
 
-
-ITALIAN_MONTHS = {
-    "gennaio": 1,
-    "febbraio": 2,
-    "marzo": 3,
-    "aprile": 4,
-    "maggio": 5,
-    "giugno": 6,
-    "luglio": 7,
-    "agosto": 8,
-    "settembre": 9,
-    "ottobre": 10,
-    "novembre": 11,
-    "dicembre": 12
-}
-
-NAPLES_LOCATIONS = {
-    "napoli", "bagnoli", "fuorigrotta", "chiaia",
-    "vomero", "posillipo", "scampia", "pianura",
-    "secondigliano", "forcella", "sanita",
-    "spaccanapoli", "capodichino"
-}
 
 def alert_risk_matches_incident(description, risks):
     """
@@ -312,7 +324,6 @@ def alert_risk_matches_incident(description, risks):
         risk = risk.casefold()
 
         for risk_type, keywords in risk_keywords.items():
-
             if risk_type in risk:
                 if any(keyword in text for keyword in keywords):
                     return True
@@ -362,11 +373,9 @@ def location_matches_territory(location, territory):
     location = location.casefold().strip()
     territory = territory.casefold().strip()
 
-    # Corrispondenza diretta.
     if location in territory or territory in location:
         return True
 
-    # Le zone che comprendono Napoli includono anche i suoi quartieri.
     if "napoli" in territory:
         if location in NAPLES_LOCATIONS:
             return True
@@ -441,34 +450,34 @@ def attach_official_alert_context(incident_id):
 
     for alert in alerts:
 
-        # Verifichiamo la corrispondenza territoriale.
         if not location_matches_territory(
             incident_location,
             alert["territory"]
         ):
             continue
 
-        # Verifichiamo il periodo di validità.
         valid_from = parse_italian_date(alert["valid_from"])
         valid_until = parse_italian_date(alert["valid_until"])
 
         if valid_from is None or valid_until is None:
             continue
 
-        if not (
-            valid_from <= incident_date.astimezone(
-                ZoneInfo("Europe/Rome")
-            ) <= valid_until
-        ):
+        incident_local_date = incident_date.astimezone(
+            ZoneInfo("Europe/Rome")
+        )
+
+        if not valid_from <= incident_local_date <= valid_until:
             continue
 
         risks = json.loads(alert["risks"] or "[]")
-                # Verifichiamo la compatibilità tra rischio e incidente.
+
+        # Verifichiamo la compatibilità tra rischio e incidente.
         if not alert_risk_matches_incident(
             incident["description"],
             risks
         ):
             continue
+
         description = (
             f"Allerta ufficiale {alert['alert_number']}: "
             f"livello {alert['alert_level']} per il territorio "
@@ -502,5 +511,3 @@ def attach_official_alert_context(incident_id):
         "matched_alerts": matched_alerts,
         "total_matches": len(matched_alerts)
     }
-
-

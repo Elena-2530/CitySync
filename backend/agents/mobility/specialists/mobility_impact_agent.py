@@ -180,6 +180,12 @@ def analyze(
                 "e non consentono una valutazione attuale."
             )
 
+            # Un dato obsoleto equivale a un dato mancante: la valutazione
+            # non può dirsi completa.
+            missing_information.append(
+                f"Le informazioni su {road} sono obsolete."
+            )
+
             required_checks.append(
                 f"Aggiornare le informazioni sulla viabilità "
                 f"di {road}."
@@ -297,6 +303,10 @@ def analyze(
             supporting_observations.append(
                 f"Le informazioni sul servizio {name} "
                 "sono obsolete."
+            )
+
+            missing_information.append(
+                f"Le informazioni sul servizio {name} sono obsolete."
             )
 
             required_checks.append(

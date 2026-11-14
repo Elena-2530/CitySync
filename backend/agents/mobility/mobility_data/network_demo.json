@@ -1,0 +1,60 @@
+{
+  "meta": {
+    "name": "Rete dimostrativa NEURAPOLIS",
+    "source": "neurapolis_network_demo",
+    "data_type": "static_demo",
+    "verified": false,
+    "realtime": false,
+    "notes": "Rete ridotta e DIMOSTRATIVA. Tracciati, coordinate e tempi sono approssimati e vanno sostituiti con dati ufficiali (GTFS ANM/EAV/Trenitalia). I tempi di tratta sono stime, non orari."
+  },
+  "stops": {
+    "garibaldi":  {"name": "Garibaldi", "lat": 40.8530, "lon": 14.2705},
+    "universita": {"name": "Università",   "lat": 40.8458, "lon": 14.2563},
+    "municipio":  {"name": "Municipio",    "lat": 40.8392, "lon": 14.2528},
+    "toledo":     {"name": "Toledo",       "lat": 40.8392, "lon": 14.2490},
+    "dante":      {"name": "Dante",        "lat": 40.8468, "lon": 14.2510},
+    "museo":      {"name": "Museo (MANN)", "lat": 40.8537, "lon": 14.2506},
+    "cavour":     {"name": "Piazza Cavour","lat": 40.8513, "lon": 14.2530},
+    "montesanto": {"name": "Montesanto",   "lat": 40.8438, "lon": 14.2467},
+    "amedeo":     {"name": "Piazza Amedeo","lat": 40.8372, "lon": 14.2271},
+    "mergellina": {"name": "Mergellina",   "lat": 40.8283, "lon": 14.2230},
+    "leopardi":   {"name": "Piazza Leopardi","lat": 40.8282, "lon": 14.1990},
+    "campiflegrei": {"name": "Campi Flegrei (Stadio)", "lat": 40.8268, "lon": 14.1945}
+  },
+  "lines": {
+    "L1": {
+      "name": "Metro Linea 1", "operator": "ANM", "mode": "metro",
+      "aliases": ["metro linea 1", "metropolitana linea 1", "linea 1", "metro l1", "l1"],
+      "stops": ["garibaldi", "universita", "municipio", "toledo", "dante", "museo"],
+      "hop_minutes": [3, 2, 2, 3, 3]
+    },
+    "L2": {
+      "name": "Metro Linea 2", "operator": "Trenitalia", "mode": "metro",
+      "aliases": ["metro linea 2", "metropolitana linea 2", "linea 2", "metro l2", "l2"],
+      "stops": ["garibaldi", "cavour", "montesanto", "amedeo", "mergellina", "leopardi", "campiflegrei"],
+      "hop_minutes": [3, 3, 4, 3, 5, 3]
+    },
+    "C56": {
+      "name": "Bus C56", "operator": "ANM", "mode": "bus",
+      "aliases": ["bus c56", "autobus c56", "linea c56", "c56"],
+      "stops": ["garibaldi", "museo"],
+      "hop_minutes": [12]
+    }
+  },
+  "places": [
+    {"name": "Piazza Garibaldi", "aliases": ["garibaldi", "napoli centrale", "stazione centrale"], "lat": 40.8530, "lon": 14.2705},
+    {"name": "Fuorigrotta", "aliases": ["fuorigrotta"], "lat": 40.8275, "lon": 14.1935},
+    {"name": "Stadio Maradona", "aliases": ["stadio maradona", "stadio diego armando maradona", "stadio san paolo", "maradona"], "lat": 40.8279, "lon": 14.1930},
+    {"name": "Castel dell'Ovo", "aliases": ["castel dell ovo", "castel ovo", "borgo marinari"], "lat": 40.8283, "lon": 14.2477},
+    {"name": "Mergellina", "aliases": ["mergellina"], "lat": 40.8283, "lon": 14.2230},
+    {"name": "Piazza del Plebiscito", "aliases": ["plebiscito", "palazzo reale"], "lat": 40.8359, "lon": 14.2488},
+    {"name": "Maschio Angioino (Castel Nuovo)", "aliases": ["maschio angioino", "castel nuovo"], "lat": 40.8384, "lon": 14.2528},
+    {"name": "Duomo di Napoli", "aliases": ["duomo", "cattedrale"], "lat": 40.8527, "lon": 14.2587},
+    {"name": "MANN (Museo Archeologico)", "aliases": ["mann", "museo archeologico", "museo archeologico nazionale"], "lat": 40.8535, "lon": 14.2505},
+    {"name": "Stazione Marittima", "aliases": ["marittima", "porto", "porto di napoli", "terminal crociere"], "lat": 40.8420, "lon": 14.2565},
+    {"name": "Via Toledo", "aliases": ["via toledo", "toledo strada"], "lat": 40.8395, "lon": 14.2490},
+    {"name": "Centro storico", "aliases": ["centro storico", "spaccanapoli", "centro"], "lat": 40.8490, "lon": 14.2545},
+    {"name": "Università Federico II", "aliases": ["federico ii", "universita federico ii", "universita degli studi federico ii"], "lat": 40.8460, "lon": 14.2580},
+    {"name": "Galleria Umberto I", "aliases": ["galleria umberto", "galleria umberto i"], "lat": 40.8383, "lon": 14.2492}
+  ]
+}

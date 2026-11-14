@@ -1,0 +1,1 @@
+"""Agenti specializzati nella protezione civile per NEURAPOLIS."""

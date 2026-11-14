@@ -1,0 +1,5 @@
+ .../test_verification_agent.cpython-311.pyc        | Bin [31m3527[m -> [32m5263[m bytes
+ .../__pycache__/verification_agent.cpython-311.pyc | Bin [31m14908[m -> [32m15123[m bytes
+ backend/agents/test_verification_agent.py          | 136 [32m+++++++++++++++[m[31m------[m
+ backend/agents/verification_agent.py               | 105 [32m++++++++[m[31m--------[m
+ 4 files changed, 158 insertions(+), 83 deletions(-)
