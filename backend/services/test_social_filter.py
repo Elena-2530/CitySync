@@ -21,3 +21,12 @@ for i, post in enumerate(test_posts, start=1):
     print(f"CATEGORIE: {result['categories']}")
     print(f"LOCALITÀ: {result['locations']}")
     print(f"MOTIVAZIONE: {result['reason']}")
+from services.social_filter import analyze_social_text
+
+testo = "Incendio segnalato a Bagnoli, Napoli. Si vede del fumo nella zona."
+
+risultato = analyze_social_text(testo)
+
+print("\nTEST POST NAPOLI")
+print("Testo:", testo)
+print("Risultato:", risultato)
