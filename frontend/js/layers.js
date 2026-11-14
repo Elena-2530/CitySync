@@ -14,8 +14,8 @@
   };
 
   // --- statici: linee e fermate (approssimate) ---
-  L.polyline(D.linea1.map((s) => s.c), { color: "#0ea5e9", weight: 4, opacity: 0.8 }).bindPopup("Linea 1 (tracciato indicativo)").addTo(layers.transport);
-  L.polyline(D.linea2.map((s) => s.c), { color: "#a855f7", weight: 4, opacity: 0.8 }).bindPopup("Linea 2 (tracciato indicativo)").addTo(layers.transport);
+  L.polyline(D.linea1.map((s) => s.c), { color: "#ffee00", weight: 4, opacity: 0.8 }).bindPopup(" Linea 1 ").addTo(layers.transport);
+  L.polyline(D.linea2.map((s) => s.c), { color: "#ff0000", weight: 4, opacity: 0.8 }).bindPopup(" Linea 6 ").addTo(layers.transport);
   const seen = new Set();
   D.linea1.concat(D.linea2).forEach((s) => {
     if (seen.has(s.name)) return;

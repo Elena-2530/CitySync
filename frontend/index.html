@@ -2,15 +2,13 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CITYSYNC | Urban Intelligence</title>
-
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <link rel="stylesheet" href="css/style.css">
+    <!-- Libreria icone vettoriali Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
-
 <body>
-
     <header class="topbar">
         <div class="brand">
             <span class="brand-icon">N</span>
@@ -19,129 +17,88 @@
                 <span>URBAN INTELLIGENCE PLATFORM</span>
             </div>
         </div>
-
-        <div class="system-status">
-            <span class="status-dot"></span>
-            Sistema operativo
-        </div>
+       
     </header>
 
     <main class="dashboard">
-
         <aside class="sidebar">
-
+            <!-- Control Center -->
             <section class="panel-section">
-                <h2>Control Center</h2>
-                <p class="subtitle" id="scenario-title"></p>
-
+                <h2><i class="ph ph-target"></i> Control Center</h2>
                 <div class="sim-controls">
-                    <div class="clock" id="clock">15:30</div>
-                    <div class="sim-buttons">
-                        <button id="btn-play" class="btn primary">▶ Avvia scenario</button>
-                        <button id="btn-step" class="btn">Passo</button>
-                        <button id="btn-reset" class="btn">Reset</button>
-                    </div>
-                    <label class="speed">Velocità
-                        <select id="speed">
-                            <option value="2000">Lenta</option>
-                            <option value="1200" selected>Normale</option>
-                            <option value="500">Veloce</option>
-                        </select>
-                    </label>
+                    <button id="btn-avvia" class="btn primary"><i class="ph-fill ph-play"></i> Avvia scenario</button>
+                    <button id="btn-reset" class="btn"><i class="ph ph-arrow-counter-clockwise"></i> Reset</button>
                 </div>
+                <!-- Orologio fisso nascosto di default -->
+                <div id="sim-clock" class="clock" style="display: none;">15:30</div>
             </section>
 
+            <!-- Panoramica -->
             <section class="panel-section">
-                <h3>Panoramica</h3>
+                <h2><i class="ph ph-chart-bar"></i> Panoramica</h2>
                 <div class="stats">
-                    <div class="stat-card"><strong id="event-count">0</strong><span>Eventi</span></div>
-                    <div class="stat-card"><strong id="alert-count">0</strong><span>Critiche</span></div>
-                    <div class="stat-card"><strong id="rec-count">0</strong><span>Azioni</span></div>
+                    <div class="stat-card"><strong>0</strong><span><i class="ph ph-calendar-blank"></i> Eventi</span></div>
+                    <div class="stat-card"><strong>0</strong><span><i class="ph ph-warning"></i> Criticità</span></div>
+                    <div class="stat-card"><strong>0</strong><span><i class="ph ph-check-square"></i> Azioni</span></div>
                 </div>
             </section>
 
+            <!-- Raccomandazioni dell'orchestratore -->
             <section class="panel-section">
-                <h3>Raccomandazioni dell'orchestratore</h3>
-                <div id="rec-list" class="rec-list"></div>
+                <h2><i class="ph ph-lightbulb"></i> Raccomandazioni dell'orchestratore</h2>
+                <!-- Vuoto per ora -->
             </section>
 
+            <!-- Registro Decisioni -->
             <section class="panel-section">
-                <h3>Registro decisioni</h3>
-                <div id="log" class="log"></div>
+                <h2><i class="ph ph-list-checks"></i> Registro decisioni</h2>
+                <div id="log" class="log">
+                    <div class="empty-message">In attesa di eventi...</div>
+                </div>
             </section>
 
+            <!-- Livelli Cartografici con icone -->
             <section class="panel-section">
-                <h3>Bacheca degli agenti</h3>
-                <div id="board" class="board"></div>
+                <h2><i class="ph ph-layers"></i> Livelli cartografici</h2>
+                <div class="layer-option">
+                    <input type="checkbox" id="chk-mobilita" class="layer-toggle" value="transport" checked>
+                    <label for="chk-mobilita"><i class="ph ph-bus"></i> Mobilità e trasporti</label>
+                </div>
+                <div class="layer-option">
+                    <input type="checkbox" id="chk-turismo" class="layer-toggle" value="tourism">
+                    <label for="chk-turismo"><i class="ph ph-camera"></i> Turismo e punti di interesse</label>
+                </div>
+                <div class="layer-option">
+                    <input type="checkbox" id="chk-affollamento" class="layer-toggle" value="events">
+                    <label for="chk-affollamento"><i class="ph ph-users"></i> Affollamento</label>
+                </div>
+                <div class="layer-option">
+                    <input type="checkbox" id="chk-meteo" class="layer-toggle" value="weather">
+                    <label for="chk-meteo"><i class="ph ph-cloud-rain"></i> Meteo</label>
+                </div>
             </section>
-
-            <section class="panel-section">
-                <h3>Risultati: senza vs con sistema</h3>
-                <div id="metrics"></div>
-            </section>
-
-            <section class="panel-section">
-                <h3>Livelli cartografici</h3>
-              
-<div>
-    <label><input type="checkbox" class="layer-toggle" value="transport" checked> Mobilità e trasporti</label>
-</div>
-<div>
-    <label><input type="checkbox" class="layer-toggle" value="tourism"> Turismo e punti di interesse</label>
-</div>
-<div>
-    <label><input type="checkbox" class="layer-toggle" value="events"> Affollamento</label>
-</div>
-<div>
-    <label><input type="checkbox" class="layer-toggle" value="recs"> Raccomandazioni</label>
-</div>
-<div>
-    <label><input type="checkbox" class="layer-toggle" value="weather"> Meteo</label>
-</div>
-
-            </section>
-
-            <section class="panel-section">
-                <h3>Assistente (opzionale)</h3>
-                <p class="note">Chiave Gemini gratuita: resta solo nel tuo browser. Senza chiave si usa un testo-modello.</p>
-                <input id="llm-key" class="text-input" type="password" placeholder="Chiave API Gemini">
-            </section>
-
-            <section class="panel-section">
-                <details>
-                    <summary>Ipotesi della simulazione</summary>
-                    <div id="assumptions"></div>
-                </details>
-            </section>
-
         </aside>
 
-        <section class="map-container">
-            <div class="map-heading">
-                <div>
-                    <h2>Mappa territoriale</h2>
-                    <p>Napoli, Campania · clic su una raccomandazione per inquadrarla</p>
+        <!-- Contenitore Mappa Fluttuante -->
+        <section class="map-container"> 
+           
+                <div class="map-header">
+                    <i class="ph ph-map-trifold"></i>
+                    <div>
+                        <h2>Mappa territoriale</h2>
+                        <p>Napoli, Campania – clic su una raccomandazione per inquadrarla</p>
+                    </div>
                 </div>
-    
-            </div>
-            <div id="map"></div>
+                <div id="map"></div> 
+            
+          
         </section>
-
     </main>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-    <!-- ordine importante: prima il modello e gli agenti, poi la mappa, infine l'interfaccia -->
-    <script src="js/model.js"></script>
     <script src="js/data.js"></script>
-    <script src="js/agents.js"></script>
-    <script src="js/orchestrator.js"></script>
-    <script src="js/scenario.js"></script>
-    <script src="js/metrics.js"></script>
-    <script src="js/llm.js"></script>
     <script src="js/map.js"></script>
     <script src="js/layers.js"></script>
-    <script src="js/app.js"></script>
-
+    <script src="js/scenario.js"></script>
 </body>
 </html>
