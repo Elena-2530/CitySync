@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEURAPOLIS | Urban Intelligence</title>
+    <title>CITYSYNC | Urban Intelligence</title>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <link rel="stylesheet" href="css/style.css">
@@ -15,7 +15,7 @@
         <div class="brand">
             <span class="brand-icon">N</span>
             <div>
-                <h1>NEURAPOLIS</h1>
+                <h1>CitySync</h1>
                 <span>URBAN INTELLIGENCE PLATFORM</span>
             </div>
         </div>
@@ -82,11 +82,23 @@
 
             <section class="panel-section">
                 <h3>Livelli cartografici</h3>
-                <label class="layer-option"><input type="checkbox" id="transport-toggle" checked><span>Mobilità e trasporti</span></label>
-                <label class="layer-option"><input type="checkbox" id="tourism-toggle" checked><span>Turismo e punti di interesse</span></label>
-                <label class="layer-option"><input type="checkbox" id="events-toggle" checked><span>Affollamento</span></label>
-                <label class="layer-option"><input type="checkbox" id="recs-toggle" checked><span>Raccomandazioni</span></label>
-                <label class="layer-option"><input type="checkbox" id="weather-toggle" checked><span>Meteo</span></label>
+              
+<div>
+    <label><input type="checkbox" class="layer-toggle" value="transport" checked> Mobilità e trasporti</label>
+</div>
+<div>
+    <label><input type="checkbox" class="layer-toggle" value="tourism"> Turismo e punti di interesse</label>
+</div>
+<div>
+    <label><input type="checkbox" class="layer-toggle" value="events"> Affollamento</label>
+</div>
+<div>
+    <label><input type="checkbox" class="layer-toggle" value="recs"> Raccomandazioni</label>
+</div>
+<div>
+    <label><input type="checkbox" class="layer-toggle" value="weather"> Meteo</label>
+</div>
+
             </section>
 
             <section class="panel-section">
@@ -110,7 +122,7 @@
                     <h2>Mappa territoriale</h2>
                     <p>Napoli, Campania · clic su una raccomandazione per inquadrarla</p>
                 </div>
-                <span class="map-tag">SIMULAZIONE · DATI DIMOSTRATIVI</span>
+    
             </div>
             <div id="map"></div>
         </section>

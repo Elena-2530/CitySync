@@ -46,6 +46,37 @@
       { name: "Museo Archeologico (MANN)", c: [40.8535, 14.2505], capacity: 2500 },
       { name: "Castel Nuovo (interno)", c: [40.838, 14.2525], capacity: 1200 }
     ],
-    rainArea: { c: [40.84, 14.232], radius: 8000 }
+    rainArea: { c: [40.84, 14.232], radius: 8000 },
+
+transportLines: [
+    {
+        id: "metro-1",
+        type: "Metro",
+        name: "Linea 1",
+        color: "#ff0000", // Rosso per la metro
+        weight: 6,
+        status: "Regolare",
+        path: linea1 // Assumendo che linea1 sia il tuo array di coordinate
+    },
+    {
+        id: "tram-4",
+        type: "Tram",
+        name: "Tram 4",
+        color: "#228B22", // Verde per il tram
+        weight: 4,
+        status: "Traffico intenso a San Giovanni",
+        path: [ /* array di coordinate del tram */ ]
+    },
+    {
+        id: "bus-151",
+        type: "Bus",
+        name: "Bus 151",
+        color: "#0000ff", // Blu per il bus
+        weight: 3,
+        status: "Deviazione per lavori in Via Vittoria",
+        path: [ /* array di coordinate del bus */ ]
+    }
+]
+
   };
 })((globalThis.NP = globalThis.NP || {}));

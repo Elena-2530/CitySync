@@ -25,6 +25,8 @@ body {
 .system-status { font-size: 12px; color: #a8b8ca; }
 .status-dot { display: inline-block; width: 8px; height: 8px; background: #22c55e; border-radius: 50%; margin-right: 7px; }
 
+
+
 /* DASHBOARD */
 .dashboard { display: flex; height: calc(100vh - 75px); }
 .sidebar {
@@ -130,3 +132,5 @@ body {
     .map-container { height: 600px; }
     .system-status { display: none; }
 }
+
+

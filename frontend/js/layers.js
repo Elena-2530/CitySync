@@ -67,6 +67,35 @@
     snap.recs.forEach((r) => drawRec(r));
   };
 
+
+      // 1. Aggiunge il layer dei trasporti alla mappa all'avvio (coerente con il checkbox "checked" nell'HTML)
+    layers.transport.addTo(map);
+
+    // 2. Seleziona tutti i checkbox a cui abbiamo assegnato la classe 'layer-toggle'
+    const layerCheckboxes = document.querySelectorAll('.layer-toggle');
+
+    // 3. Aggiunge un "ascoltatore" di eventi a ciascun checkbox
+    layerCheckboxes.forEach(checkbox => {
+         
+    document.addEventListener('change', function(event) {
+        // Controlla se l'elemento modificato è uno dei nostri checkbox
+        if (event.target && event.target.classList.contains('layer-toggle')) {
+            const layerName = event.target.value;
+            const targetLayer = layers[layerName];
+
+            if (targetLayer) {
+                if (event.target.checked) {
+                    map.addLayer(targetLayer);
+                } else {
+                    map.removeLayer(targetLayer);
+                }
+            }
+        }
+    });
+
+    });
+
+
   function drawRec(r) {
     const color = PRIORITY_COLORS[r.priority] || "#38bdf8";
     const g = r.geometry || {};
