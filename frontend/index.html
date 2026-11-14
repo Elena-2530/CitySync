@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEURAPOLIS | Urban Intelligence</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <header class="topbar">
+        <div class="brand">
+            <span class="brand-icon">N</span>
+            <div>
+                <h1>NEURAPOLIS</h1>
+                <span>URBAN INTELLIGENCE PLATFORM</span>
+            </div>
+        </div>
+
+        <div class="system-status">
+            <span class="status-dot"></span>
+            Sistema operativo
+        </div>
+    </header>
+
+    <main class="dashboard">
+
+        <aside class="sidebar">
+
+            <section class="panel-section">
+                <h2>Control Center</h2>
+                <p class="subtitle" id="scenario-title"></p>
+
+                <div class="sim-controls">
+                    <div class="clock" id="clock">15:30</div>
+                    <div class="sim-buttons">
+                        <button id="btn-play" class="btn primary">▶ Avvia scenario</button>
+                        <button id="btn-step" class="btn">Passo</button>
+                        <button id="btn-reset" class="btn">Reset</button>
+                    </div>
+                    <label class="speed">Velocità
+                        <select id="speed">
+                            <option value="2000">Lenta</option>
+                            <option value="1200" selected>Normale</option>
+                            <option value="500">Veloce</option>
+                        </select>
+                    </label>
+                </div>
+            </section>
+
+            <section class="panel-section">
+                <h3>Panoramica</h3>
+                <div class="stats">
+                    <div class="stat-card"><strong id="event-count">0</strong><span>Eventi</span></div>
+                    <div class="stat-card"><strong id="alert-count">0</strong><span>Critiche</span></div>
+                    <div class="stat-card"><strong id="rec-count">0</strong><span>Azioni</span></div>
+                </div>
+            </section>
+
+            <section class="panel-section">
+                <h3>Raccomandazioni dell'orchestratore</h3>
+                <div id="rec-list" class="rec-list"></div>
+            </section>
+
+            <section class="panel-section">
+                <h3>Registro decisioni</h3>
+                <div id="log" class="log"></div>
+            </section>
+
+            <section class="panel-section">
+                <h3>Bacheca degli agenti</h3>
+                <div id="board" class="board"></div>
+            </section>
+
+            <section class="panel-section">
+                <h3>Risultati: senza vs con sistema</h3>
+                <div id="metrics"></div>
+            </section>
+
+            <section class="panel-section">
+                <h3>Livelli cartografici</h3>
+                <label class="layer-option"><input type="checkbox" id="transport-toggle" checked><span>Mobilità e trasporti</span></label>
+                <label class="layer-option"><input type="checkbox" id="tourism-toggle" checked><span>Turismo e punti di interesse</span></label>
+                <label class="layer-option"><input type="checkbox" id="events-toggle" checked><span>Affollamento</span></label>
+                <label class="layer-option"><input type="checkbox" id="recs-toggle" checked><span>Raccomandazioni</span></label>
+                <label class="layer-option"><input type="checkbox" id="weather-toggle" checked><span>Meteo</span></label>
+            </section>
+
+            <section class="panel-section">
+                <h3>Assistente (opzionale)</h3>
+                <p class="note">Chiave Gemini gratuita: resta solo nel tuo browser. Senza chiave si usa un testo-modello.</p>
+                <input id="llm-key" class="text-input" type="password" placeholder="Chiave API Gemini">
+            </section>
+
+            <section class="panel-section">
+                <details>
+                    <summary>Ipotesi della simulazione</summary>
+                    <div id="assumptions"></div>
+                </details>
+            </section>
+
+        </aside>
+
+        <section class="map-container">
+            <div class="map-heading">
+                <div>
+                    <h2>Mappa territoriale</h2>
+                    <p>Napoli, Campania · clic su una raccomandazione per inquadrarla</p>
+                </div>
+                <span class="map-tag">SIMULAZIONE · DATI DIMOSTRATIVI</span>
+            </div>
+            <div id="map"></div>
+        </section>
+
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- ordine importante: prima il modello e gli agenti, poi la mappa, infine l'interfaccia -->
+    <script src="js/model.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/agents.js"></script>
+    <script src="js/orchestrator.js"></script>
+    <script src="js/scenario.js"></script>
+    <script src="js/metrics.js"></script>
+    <script src="js/llm.js"></script>
+    <script src="js/map.js"></script>
+    <script src="js/layers.js"></script>
+    <script src="js/app.js"></script>
+
+</body>
+</html>
