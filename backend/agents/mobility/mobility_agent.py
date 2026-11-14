@@ -2,8 +2,6 @@
 import logging
 from datetime import datetime, timezone
 
-from services.database import get_connection
-
 from agents.mobility.specialists import traffic_agent
 from agents.mobility.specialists import public_transport_agent
 from agents.mobility.specialists import route_planning_agent
@@ -14,57 +12,21 @@ from agents.mobility.specialists import mobility_assistance_agent
 logger = logging.getLogger("neurapolis.mobility")
 
 
-def load_incident(incident_id):
-    """
-    Recupera un incidente e le segnalazioni associate
-    dal database NEURAPOLIS.
-    """
+VALID_SENDERS = {"janara", "user", "operator"}
 
-    connection = get_connection()
-
-    try:
-        incident = connection.execute(
-            """
-            SELECT *
-            FROM incidents
-            WHERE id = ?
-            """,
-            (incident_id,)
-        ).fetchone()
-
-        if incident is None:
-            return None
-
-        reports = connection.execute(
-            """
-            SELECT
-                id,
-                source,
-                author_did,
-                text,
-                categories,
-                locations,
-                published_at,
-                received_at
-            FROM social_reports
-            WHERE incident_id = ?
-            ORDER BY published_at ASC
-            """,
-            (incident_id,)
-        ).fetchall()
-
-        return {
-            "incident": dict(incident),
-            "reports": [dict(report) for report in reports]
-        }
-
-    finally:
-        connection.close()
+VALID_REQUEST_TYPES = {
+    "incident_analysis",
+    "route_request",
+    "question"
+}
 
 
 def validate_request(request):
     """
-    Controlla la struttura minima della richiesta.
+    Controlla che la richiesta ricevuta sia strutturata correttamente.
+
+    Il Mobility Agent riceve le informazioni dal chiamante.
+    Non recupera autonomamente segnalazioni o incidenti dal database.
     """
 
     if not isinstance(request, dict):
@@ -72,41 +34,138 @@ def validate_request(request):
 
     sender = request.get("sender")
 
-    if sender not in ["janara", "user", "operator"]:
+    if sender not in VALID_SENDERS:
         raise ValueError(
             "Mittente non valido: janara, user oppure operator."
         )
 
     request_type = request.get("request_type")
 
-    allowed_types = [
-        "incident_analysis",
-        "route_request",
-        "question"
-    ]
+    if request_type not in VALID_REQUEST_TYPES:
+        raise ValueError(
+            "Tipologia non valida: incident_analysis, "
+            "route_request oppure question."
+        )
 
-    if request_type not in allowed_types:
-        raise ValueError("Tipologia di richiesta non riconosciuta.")
+    context = request.get("context", {})
 
-    if not isinstance(request.get("context") or {}, dict):
+    if not isinstance(context, dict):
         raise ValueError("Il campo context deve essere un dizionario.")
 
-    if request_type == "incident_analysis":
-        if request.get("incident_id") is None:
+    incident = request.get("incident")
+
+    if incident is not None and not isinstance(incident, dict):
+        raise ValueError("Il campo incident deve essere un dizionario.")
+
+    question = request.get("question")
+
+    if question is not None and not isinstance(question, str):
+        raise ValueError("Il campo question deve essere una stringa.")
+
+    if request_type == "incident_analysis" and incident is None:
+        raise ValueError(
+            "Per analizzare una criticità è necessario fornire "
+            "il campo incident."
+        )
+
+    if request_type == "route_request":
+        if not context.get("origin"):
             raise ValueError(
-                "Per analizzare un incidente è necessario incident_id."
+                "Per pianificare un percorso è necessario specificare "
+                "il punto di partenza."
+            )
+
+        if not context.get("destination"):
+            raise ValueError(
+                "Per pianificare un percorso è necessario specificare "
+                "la destinazione."
             )
 
     return True
 
 
+def determine_specialists(request_type, question, context):
+    """
+    Stabilisce quali specialisti devono essere attivati.
+
+    La selezione riguarda esclusivamente le competenze di mobilità.
+    """
+
+    specialists = set()
+
+    if request_type == "incident_analysis":
+        specialists.update({
+            "traffic",
+            "public_transport",
+            "mobility_impact"
+        })
+
+        if context.get("origin") and context.get("destination"):
+            specialists.add("route_planning")
+
+    elif request_type == "route_request":
+        specialists.update({
+            "public_transport",
+            "route_planning"
+        })
+
+    elif request_type == "question":
+        question_text = (question or "").lower()
+
+        traffic_keywords = [
+            "traffico",
+            "incidente",
+            "strada",
+            "viabilità",
+            "chiusa",
+            "chiusura",
+            "bloccata",
+            "bloccato",
+            "allagamento",
+            "allagata",
+            "rallentamento"
+        ]
+
+        transport_keywords = [
+            "autobus",
+            "bus",
+            "tram",
+            "metro",
+            "metropolitana",
+            "treno",
+            "treni",
+            "mezzi",
+            "trasporto pubblico",
+            "linea"
+        ]
+
+        if any(word in question_text for word in traffic_keywords):
+            specialists.add("traffic")
+
+        if any(word in question_text for word in transport_keywords):
+            specialists.add("public_transport")
+
+        if context.get("origin") and context.get("destination"):
+            specialists.add("route_planning")
+
+        if request_type == "question" and not specialists:
+            # Una richiesta non classificabile non deve generare
+            # analisi specialistiche non pertinenti.
+            pass
+
+    return specialists
+
+
 def analyze_mobility_request(request):
     """
-    Punto di ingresso del Mobility System.
+    Punto di ingresso del Mobility Agent.
 
-    Riceve richieste da Janara, operatori e utenti.
-    Attiva gli specialisti necessari.
-    Integra i risultati e restituisce una risposta strutturata.
+    Riceve una richiesta da Janara, da un utente o da un operatore.
+    Coordina gli specialisti e restituisce un'analisi strutturata.
+
+    Non legge il database e non analizza direttamente le segnalazioni
+    social: queste responsabilità appartengono agli altri componenti
+    di NEURAPOLIS.
     """
 
     validate_request(request)
@@ -114,154 +173,48 @@ def analyze_mobility_request(request):
     request_id = request.get("request_id")
     sender = request["sender"]
     request_type = request["request_type"]
-
-    context = request.get("context") or {}
     question = request.get("question")
+    incident = request.get("incident")
+    context = request.get("context") or {}
 
-    incident = None
-    reports = []
-
-    # --------------------------------------------------------
-    # 1. RECUPERO DEI DATI DELL'INCIDENTE
-    # --------------------------------------------------------
-
-    incident_id = request.get("incident_id")
-
-    if incident_id is not None:
-
-        incident_data = load_incident(incident_id)
-
-        if incident_data is None:
-            return {
-                "agent": "mobility_agent",
-                "request_id": request_id,
-                "status": "incident_not_found",
-                "response": (
-                    f"Non è stato trovato l'incidente {incident_id}."
-                )
-            }
-
-        incident = incident_data["incident"]
-        reports = incident_data["reports"]
-
-    # --------------------------------------------------------
-    # 2. ATTIVAZIONE DEGLI SPECIALISTI
-    # --------------------------------------------------------
+    selected_specialists = determine_specialists(
+        request_type,
+        question,
+        context
+    )
 
     traffic_result = None
     transport_result = None
     route_result = None
     impact_result = None
 
-    if request_type == "incident_analysis":
-
+    # 1. Analisi del traffico e della viabilità.
+    if "traffic" in selected_specialists:
         traffic_result = traffic_agent.analyze(
-            incident,
-            reports,
-            context
+            incident=incident,
+            context=context
         )
 
+    # 2. Analisi del trasporto pubblico.
+    if "public_transport" in selected_specialists:
         transport_result = public_transport_agent.analyze(
-            incident,
-            reports,
-            context
+            incident=incident,
+            context=context
         )
 
-        impact_result = mobility_impact_agent.analyze(
-            incident,
-            traffic_result,
-            transport_result
-        )
-
-        # Il pianificatore viene attivato solo se
-        # sono disponibili partenza e destinazione.
-        if context.get("origin") and context.get("destination"):
-            route_result = route_planning_agent.analyze(context)
-
-    elif request_type == "route_request":
-
-        transport_result = public_transport_agent.analyze(
-            incident,
-            reports,
-            context
-        )
-
+    # 3. Pianificazione dei percorsi.
+    if "route_planning" in selected_specialists:
         route_result = route_planning_agent.analyze(context)
 
-    elif request_type == "question":
+    # 4. Valutazione degli impatti sulla mobilità.
+    if "mobility_impact" in selected_specialists:
+        impact_result = mobility_impact_agent.analyze(
+            incident=incident,
+            traffic_analysis=traffic_result,
+            transport_analysis=transport_result
+        )
 
-        question_text = (question or "").lower()
-
-        if any(word in question_text for word in [
-            "traffico", "incidente", "strada", "viabilità"
-        ]):
-            traffic_result = traffic_agent.analyze(
-                incident,
-                reports,
-                context
-            )
-
-        if any(word in question_text for word in [
-            "autobus", "bus", "tram", "metro",
-            "metropolitana", "treno", "mezzi"
-        ]):
-            transport_result = public_transport_agent.analyze(
-                incident,
-                reports,
-                context
-            )
-
-        if context.get("origin") and context.get("destination"):
-            route_result = route_planning_agent.analyze(context)
-
-        if incident:
-            impact_result = mobility_impact_agent.analyze(
-                incident,
-                traffic_result or {},
-                transport_result or {}
-            )
-
-    # --------------------------------------------------------
-    # 3. VALUTAZIONE DELL'AFFIDABILITÀ E DELL'URGENZA
-    # --------------------------------------------------------
-
-    verification_status = (
-        incident.get("verification_status")
-        if incident else None
-    )
-
-    urgency = "not_assessed"
-    urgency_reason = None
-
-    if incident:
-
-        description = (
-            incident.get("description") or ""
-        ).lower()
-
-        urgent_terms = [
-            "feriti",
-            "crollo",
-            "esplosione",
-            "incendio",
-            "fuga di gas",
-            "strada completamente bloccata"
-        ]
-
-        if any(term in description for term in urgent_terms):
-            urgency = "urgent_human_review"
-            urgency_reason = (
-                "La descrizione contiene elementi che richiedono "
-                "una valutazione tempestiva da parte di un operatore."
-            )
-
-        else:
-            urgency = "standard_review"
-
-    # --------------------------------------------------------
-    # 4. PREPARAZIONE DELLA RISPOSTA
-    # --------------------------------------------------------
-
+    # 5. Preparazione della risposta.
     response_result = mobility_assistance_agent.generate_response(
         sender=sender,
         question=question,
@@ -271,53 +224,43 @@ def analyze_mobility_request(request):
         impact=impact_result
     )
 
-    # --------------------------------------------------------
-    # 5. RISULTATO FINALE
-    # --------------------------------------------------------
-
     result = {
         "agent": "mobility_agent",
         "request_id": request_id,
-        "generated_at": datetime.now(
-            timezone.utc
-        ).isoformat(),
-
+        "generated_at": datetime.now(timezone.utc).isoformat(),
         "status": "analysis_completed",
-
         "request": {
             "sender": sender,
             "request_type": request_type,
             "question": question
         },
-
         "incident": incident,
-
+        "selected_specialists": sorted(selected_specialists),
         "specialist_analyses": {
             "traffic": traffic_result,
             "public_transport": transport_result,
             "route_planning": route_result,
             "mobility_impact": impact_result
         },
-
-        "assessment": {
-            "verification_status": verification_status,
-            "urgency": urgency,
-            "urgency_reason": urgency_reason
-        },
-
-        "response": response_result
+        "response": response_result,
+        "limitations": [
+            "Le valutazioni dipendono dai dati forniti nella richiesta.",
+            "Il Mobility Agent non verifica autonomamente "
+            "l'attendibilità delle segnalazioni.",
+            "Percorsi e condizioni non sono considerati verificati "
+            "se non sono supportati da dati aggiornati."
+        ]
     }
 
     logger.info(
         "Richiesta Mobility completata: %s",
-        request_id
+        request_id or "senza ID"
     )
 
     return result
 
 
 if __name__ == "__main__":
-
     import json
 
     logging.basicConfig(
@@ -325,31 +268,33 @@ if __name__ == "__main__":
         format="%(asctime)s | %(levelname)s | %(message)s"
     )
 
-    try:
-        incident_id = int(
-            input("Inserisci l'ID di un incidente: ")
-        )
+    # Esempio di richiesta ricevuta da Janara.
+    # I dati sono simulati: non rappresentano condizioni reali.
 
-        request = {
-            "request_id": "MOBILITY-TEST-001",
-            "sender": "janara",
-            "request_type": "incident_analysis",
-            "incident_id": incident_id,
-            "question": None,
-            "context": {}
+    example_request = {
+        "request_id": "MOBILITY-TEST-001",
+        "sender": "janara",
+        "request_type": "incident_analysis",
+        "question": None,
+        "incident": {
+            "id": 15,
+            "event_type": "environment",
+            "description": "Possibile allagamento a Fuorigrotta "
+                           "dopo il temporale.",
+            "location": "Fuorigrotta, Napoli",
+            "verification_status": "unverified"
+        },
+        "context": {
+            "traffic_data": {},
+            "transport_data": {}
         }
+    }
 
-        result = analyze_mobility_request(request)
+    try:
+        result = analyze_mobility_request(example_request)
 
         print("\n===== MOBILITY AGENT =====")
-
-        print(
-            json.dumps(
-                result,
-                indent=4,
-                ensure_ascii=False
-            )
-        )
+        print(json.dumps(result, indent=4, ensure_ascii=False))
 
     except ValueError as error:
         print(f"Richiesta non valida: {error}")
