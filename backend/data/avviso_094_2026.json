@@ -1,0 +1,74 @@
+{
+    "alert_number": "094/2026",
+    "valid_from": "06:00 domenica 15 novembre 2026",
+    "valid_until": "06:00 lunedì 16 novembre 2026",
+    "zones": [
+        {
+            "zone": 1,
+            "alert_level": "gialla",
+            "risks": [
+                "idrogeologico"
+            ],
+            "territory": "Piana campana, Napoli, Isole, Area Vesuviana"
+        },
+        {
+            "zone": 2,
+            "alert_level": "gialla",
+            "risks": [
+                "idrogeologico"
+            ],
+            "territory": "Alto Volturno e Matese"
+        },
+        {
+            "zone": 3,
+            "alert_level": "gialla",
+            "risks": [
+                "idrogeologico",
+                "idraulico"
+            ],
+            "territory": "Penisola sorrentino-amalfitana, Monti di Sarno e Monti Picentini"
+        },
+        {
+            "zone": 4,
+            "alert_level": "gialla",
+            "risks": [
+                "idrogeologico"
+            ],
+            "territory": "Alta Irpinia e Sannio"
+        },
+        {
+            "zone": 5,
+            "alert_level": "gialla",
+            "risks": [
+                "idrogeologico",
+                "idraulico"
+            ],
+            "territory": "Tusciano e Alto Sele"
+        },
+        {
+            "zone": 6,
+            "alert_level": "gialla",
+            "risks": [
+                "idrogeologico",
+                "idraulico"
+            ],
+            "territory": "Piana Sele e Alto Cilento"
+        },
+        {
+            "zone": 7,
+            "alert_level": "gialla",
+            "risks": [
+                "idrogeologico"
+            ],
+            "territory": "Tanagro"
+        },
+        {
+            "zone": 8,
+            "alert_level": "gialla",
+            "risks": [
+                "idrogeologico"
+            ],
+            "territory": "Basso Cilento"
+        }
+    ]
+}

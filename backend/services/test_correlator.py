@@ -1,16 +1,22 @@
 
-
 from datetime import datetime, timezone
 from uuid import uuid4
 
 from services.incident_correlator import correlate_report
-from services.database import get_connection
+from services.database import get_connection, init_db
 
 
-# Identificativo diverso a ogni esecuzione del test
+# Inizializziamo il database selezionato.
+# Se NEURAPOLIS_DB_PATH indica un database di test,
+# le tabelle verranno create lì.
+init_db()
+
+
+# Identificativo diverso a ogni esecuzione del test.
 test_id = uuid4().hex[:8]
 
-# Cinque post simulati, pubblicati da cinque autori diversi
+
+# Cinque post simulati, pubblicati da cinque autori diversi.
 posts = [
     "Strada allagata a Fuorigrotta dopo il temporale.",
     "Diverse auto bloccate dall'acqua a Fuorigrotta.",
@@ -19,7 +25,8 @@ posts = [
     "Situazione critica per la pioggia a Fuorigrotta."
 ]
 
-# Usiamo la stessa categoria e località per tutti i post
+
+# Usiamo la stessa categoria e località per tutti i post.
 categories = [
     {
         "category": "environment",
@@ -29,15 +36,19 @@ categories = [
 
 locations = [f"fuorigrotta_test_{test_id}"]
 
-# Orario attuale in formato UTC
+# Orario attuale in formato UTC.
 published_at = datetime.now(timezone.utc).isoformat()
 
 incident_ids = []
 
+
 for index, post_text in enumerate(posts):
 
     incident_id = correlate_report(
-        post_uri=f"at://test-author-{test_id}/app.bsky.feed.post/post{index}",
+        post_uri=(
+            f"at://test-author-{test_id}/"
+            f"app.bsky.feed.post/post{index}"
+        ),
         text=post_text,
         categories=categories,
         locations=locations,
@@ -53,7 +64,7 @@ for index, post_text in enumerate(posts):
     )
 
 
-# Verifica il risultato direttamente nel database
+# Verifichiamo il risultato direttamente nel database.
 connection = get_connection()
 
 try:
@@ -84,7 +95,9 @@ try:
     ):
         print("\nTEST SUPERATO!")
     else:
-        print("\nTEST NON SUPERATO.")
+        raise AssertionError(
+            "Il test di correlazione non ha prodotto il risultato atteso."
+        )
 
 finally:
     connection.close()
