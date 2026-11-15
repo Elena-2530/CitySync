@@ -25,7 +25,17 @@
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
+<script>
+    const scenarioDescription = document.getElementById("scenario-description");
+    const scenarioCharCount = document.getElementById("scenario-char-count");
 
+    if (scenarioDescription && scenarioCharCount) {
+        scenarioDescription.addEventListener("input", () => {
+            scenarioCharCount.textContent =
+                `${scenarioDescription.value.length}/1000`;
+        });
+    }
+</script>
 <body>
 
     <header class="topbar">
@@ -61,7 +71,57 @@
                         Reset
                     </button>
                 </div>
+<div class="scenario-input">
 
+    <label for="scenario-description">
+        Descrivi lo scenario da simulare
+    </label>
+
+    <textarea
+        id="scenario-description"
+        placeholder="Es. Simula un forte affollamento al Vomero durante un evento serale, con pioggia intensa e possibili problemi alla viabilità..."
+        rows="5"
+        minlength="10"
+        maxlength="1000"
+    ></textarea>
+
+    <div class="scenario-input-footer">
+        <span>Descrivi liberamente cosa vuoi simulare.</span>
+        <span id="scenario-char-count">0/1000</span>
+    </div>
+
+    <div
+        id="scenario-status"
+        class="scenario-status"
+        role="status"
+        aria-live="polite"
+    ></div>
+
+</div>
+<!-- Descrizione scenario -->
+<div class="scenario-input">
+
+    <label for="scenario-description">
+        Descrivi lo scenario da simulare
+    </label>
+
+    <textarea
+        id="scenario-description"
+        rows="4"
+        placeholder="Es. Simula un forte affollamento al Vomero durante un evento, in presenza di pioggia intensa..."
+    ></textarea>
+
+    <p class="scenario-hint">
+        Seleziona prima una località sulla mappa e descrivi cosa vuoi analizzare.
+    </p>
+
+    <div
+        id="scenario-status"
+        role="status"
+        aria-live="polite"
+    ></div>
+
+</div>
                 <div id="sim-clock" class="clock" style="display: none;">
                     15:30
                 </div>
@@ -190,16 +250,54 @@
         <section class="map-container">
 
             <div class="map-header">
-                <i class="ph ph-map-trifold"></i>
+    <i class="ph ph-map-trifold"></i>
 
-                <div>
-                    <h2>Mappa territoriale</h2>
-                    <p>
-                        Napoli, Campania – clic su una raccomandazione
-                        per inquadrarla
-                    </p>
-                </div>
-            </div>
+    <div>
+        <h2>Mappa territoriale</h2>
+        <p id="map-location-label">
+            Seleziona una località per iniziare
+        </p>
+    </div>
+</div>
+
+<!-- Ricerca geografica -->
+<div class="location-search">
+
+    <form id="location-search-form" class="search-form">
+
+        <div class="search-input-wrapper">
+            <i class="ph ph-magnifying-glass"></i>
+
+            <input
+                type="search"
+                id="location-search-input"
+                placeholder="Cerca città, via o quartiere..."
+                autocomplete="off"
+                minlength="2"
+                required
+            >
+
+            <button type="submit" id="location-search-button">
+                Cerca
+            </button>
+        </div>
+
+    </form>
+
+    <div
+        id="location-search-status"
+        class="search-status"
+        role="status"
+        aria-live="polite"
+    ></div>
+
+    <div
+        id="location-search-results"
+        class="search-results"
+        aria-label="Risultati della ricerca"
+    ></div>
+
+</div>
 
             <div id="map"></div>
 

@@ -711,3 +711,330 @@ i.ph-fill {
         animation-duration: 0.01ms !important;
     }
 }
+/* =========================================================
+   RICERCA GEOGRAFICA
+   ========================================================= */
+
+.location-search {
+    position: relative;
+    z-index: 500;
+    margin-bottom: 16px;
+}
+
+.search-form {
+    width: 100%;
+}
+
+.search-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    min-height: 50px;
+    padding: 5px 6px 5px 14px;
+
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    box-shadow: 0 3px 12px rgba(15, 23, 42, 0.04);
+}
+
+.search-input-wrapper > i {
+    color: var(--muted);
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.search-input-wrapper input {
+    flex: 1;
+    min-width: 0;
+    height: 38px;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+    color: var(--text);
+
+    font-family: inherit;
+    font-size: 14px;
+}
+
+.search-input-wrapper input::placeholder {
+    color: #94a3b8;
+}
+
+.search-input-wrapper:focus-within {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.search-input-wrapper button {
+    min-height: 38px;
+    padding: 0 18px;
+
+    border: none;
+    border-radius: 7px;
+
+    background: var(--primary);
+    color: white;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.search-input-wrapper button:hover {
+    background: var(--primary-dark);
+}
+
+.search-input-wrapper button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+.search-status {
+    min-height: 0;
+    margin-top: 8px;
+
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.search-status:empty {
+    display: none;
+}
+
+.search-status.error {
+    color: var(--danger);
+}
+
+.search-status.success {
+    color: var(--success);
+}
+
+.search-results {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+
+    margin-top: 8px;
+}
+
+.search-result {
+    width: 100%;
+    padding: 12px 14px;
+
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+
+    text-align: left;
+
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+
+    cursor: pointer;
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease;
+}
+
+.search-result:hover {
+    border-color: var(--primary);
+    background: var(--primary-light);
+}
+
+.search-result:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.25);
+    outline-offset: 2px;
+}
+
+.search-result > i {
+    color: var(--primary);
+    font-size: 19px;
+    margin-top: 1px;
+}
+
+.search-result-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.search-result-content strong {
+    color: var(--navy);
+    font-size: 13px;
+}
+
+.search-result-content span {
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 768px) {
+
+    .location-search {
+        margin-bottom: 12px;
+    }
+
+    .search-input-wrapper {
+        min-height: 48px;
+    }
+
+    .search-input-wrapper input {
+        font-size: 13px;
+    }
+
+    .search-input-wrapper button {
+        padding: 0 13px;
+    }
+
+    .search-result {
+        padding: 13px;
+    }
+}
+
+@media (max-width: 380px) {
+
+    .search-input-wrapper {
+        gap: 6px;
+        padding-left: 9px;
+    }
+
+    .search-input-wrapper button {
+        padding: 0 10px;
+        font-size: 12px;
+    }
+}
+/* ========================================
+   INPUT DESCRIZIONE SCENARIO
+======================================== */
+
+.scenario-input {
+    margin-top: 18px;
+}
+
+.scenario-input label {
+    display: block;
+    margin-bottom: 9px;
+    color: #0f172a;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.scenario-input textarea {
+    width: 100%;
+    min-height: 115px;
+    padding: 12px;
+    resize: vertical;
+
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+
+    background: #ffffff;
+    color: #0f172a;
+
+    font-family: inherit;
+    font-size: 13px;
+    line-height: 1.5;
+
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.scenario-input textarea:focus {
+    border-color: #0ea5e9;
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.12);
+}
+
+.scenario-input textarea::placeholder {
+    color: #94a3b8;
+}
+
+.scenario-input-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 6px;
+
+    color: #64748b;
+    font-size: 11px;
+}
+
+.scenario-status {
+    margin-top: 8px;
+    font-size: 12px;
+    color: #64748b;
+}
+
+.scenario-status.error {
+    color: #dc2626;
+}
+
+.scenario-status.success {
+    color: #15803d;
+}
+/* =========================================================
+   INPUT SCENARIO
+   ========================================================= */
+
+.scenario-input {
+    margin-top: 18px;
+}
+
+.scenario-input label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 13px;
+    color: #0f172a;
+}
+
+.scenario-input textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    resize: vertical;
+    font-family: inherit;
+    font-size: 13px;
+    line-height: 1.5;
+    outline: none;
+}
+
+.scenario-input textarea:focus {
+    border-color: #0ea5e9;
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.12);
+}
+
+.scenario-hint {
+    margin-top: 7px;
+    font-size: 11px;
+    line-height: 1.5;
+    color: #64748b;
+}
+
+#scenario-status {
+    margin-top: 8px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+#scenario-status.error {
+    color: #dc2626;
+}
+
+#scenario-status.success {
+    color: #15803d;
+}

@@ -39,15 +39,16 @@ def normalize_location(location):
     return " ".join(text.lower().strip().split())
 
 
+
 def build_search_query(location):
-    """Costruisce una ricerca geografica riferita a Napoli."""
+    """Prepara una ricerca geografica senza imporre Napoli."""
 
     location = location.strip()
 
-    if "napoli" in normalize_location(location):
+    if "italia" not in normalize_location(location):
         return f"{location}, Italia"
 
-    return f"{location}, Napoli, Campania, Italia"
+    return location
 
 
 def init_geocoding_table():
@@ -126,7 +127,8 @@ def respect_nominatim_rate_limit():
     _last_request_time = time.monotonic()
 
 
-def search_nominatim(query):
+
+def search_nominatim(query, limit=5):
     """Interroga OpenStreetMap Nominatim."""
 
     respect_nominatim_rate_limit()
@@ -134,7 +136,7 @@ def search_nominatim(query):
     parameters = urlencode({
         "q": query,
         "format": "jsonv2",
-        "limit": 1,
+        "limit": limit,
         "addressdetails": 1
     })
 
