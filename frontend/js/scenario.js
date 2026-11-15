@@ -16,7 +16,8 @@
     let currentRequest = null;
     let activeController = null;
 
-    if (!startButton || !resetButton || !descriptionInput || !statusElement || !logElement || !NP.geocoding) {
+    if (!startButton || !resetButton || !descriptionInput ||
+        !statusElement || !logElement || !NP.geocoding) {
         console.error("CitySync: componenti non inizializzati.");
         return;
     }
@@ -139,7 +140,9 @@
     function createResultPanel() {
         let panel = document.getElementById("citysync-result");
 
-        if (panel) panel.remove();
+        if (panel) {
+            panel.remove();
+        }
 
         panel = document.createElement("section");
         panel.id = "citysync-result";
@@ -150,43 +153,60 @@
     }
 
     // -----------------------------------------------------
-    // DATI RISPOSTA
-    // -----------------------------------------------------
-
-    function getCivilProtectionResult(janara) {
-        const results = janara.agent_results?.civil_protection;
-
-        if (!results) return null;
-
-        const items = Array.isArray(results) ? results : [results];
-
-        return items.find(item => item && item.safety_assessment) || items[0] || null;
-    }
-
-    // -----------------------------------------------------
-    // VISUALIZZAZIONE RISULTATO
+    // VISUALIZZAZIONE RISULTATO SIMULAZIONE
     // -----------------------------------------------------
 
     function renderResult(data) {
 
         const panel = createResultPanel();
-        const janara = data.janara || {};
-        const civil = getCivilProtectionResult(janara);
+        const simulation = data.simulation;
 
-        addText(panel, "div", "result-heading", "Risultato dell'analisi");
+        if (!simulation) {
+            addText(
+                panel,
+                "div",
+                "result-heading",
+                "Risultato non disponibile"
+            );
+
+            addText(
+                panel,
+                "p",
+                "result-summary",
+                "Il backend non ha restituito i dati della simulazione."
+            );
+
+            return;
+        }
+
+        // Intestazione
+
+        addText(
+            panel,
+            "div",
+            "result-heading",
+            "SIMULAZIONE IPOTETICA"
+        );
 
         addText(
             panel,
             "div",
             "result-summary",
-            janara.response || "Analisi completata. Non sono disponibili ulteriori informazioni."
+            simulation.scenario.description +
+            "\nLocalità: " + simulation.scenario.location +
+            "\nCategoria: " + simulation.scenario.category
         );
 
-        // Allerte
+        // Possibili conseguenze
 
-        const alerts = civil?.official_alert_analysis?.alerts || [];
+        addText(
+            panel,
+            "div",
+            "advice-title",
+            "Possibili conseguenze"
+        );
 
-        alerts.filter(alert => alert.validity_status === "active").forEach(alert => {
+        (simulation.impacts || []).forEach(impact => {
 
             const card = document.createElement("div");
             card.className = "alert-card";
@@ -195,101 +215,113 @@
                 card,
                 "div",
                 "alert-title",
-                "Allerta attiva – livello " + (alert.level || "non specificato")
+                impact.area + " · Priorità " + impact.priority
             );
 
             addText(
                 card,
                 "div",
                 "alert-info",
-                [
-                    "Rischio: " + (alert.risk || alert.risk_type || "Idrogeologico"),
-                    alert.valid_from ? "Dalle: " + alert.valid_from : "",
-                    alert.valid_until ? "Fino alle: " + alert.valid_until : ""
-                ].filter(Boolean).join("\n")
+                impact.description
             );
 
             panel.appendChild(card);
         });
 
-        // Consigli
+        // Servizi coinvolti
 
-        addText(panel, "div", "advice-title", "Consigli di gestione");
+        addText(
+            panel,
+            "div",
+            "advice-title",
+            "Servizi potenzialmente coinvolti"
+        );
 
-        const recommendations = civil?.safety_assessment?.recommendations || [];
+        const servicesList = document.createElement("ul");
+        servicesList.className = "advice-list";
 
-        if (recommendations.length) {
+        (simulation.affected_services || []).forEach(service => {
 
-            const list = document.createElement("ul");
-            list.className = "advice-list";
+            const li = document.createElement("li");
+            li.textContent = service;
 
-            recommendations.forEach(item => {
-                const li = document.createElement("li");
-                li.textContent = "✓  " + (
-                    typeof item === "string"
-                        ? item
-                        : item.text || item.description || ""
-                );
-                list.appendChild(li);
-            });
+            servicesList.appendChild(li);
+        });
 
-            panel.appendChild(list);
+        panel.appendChild(servicesList);
 
-        } else {
-            addText(
-                panel,
-                "p",
-                "",
-                "Per questo scenario non sono disponibili consigli specifici. Consulta le indicazioni delle autorità competenti."
-            );
-        }
+        // Piano d'azione
 
-        // Dettagli facoltativi
+        addText(
+            panel,
+            "div",
+            "advice-title",
+            "Piano d'azione suggerito"
+        );
+
+        const actionsList = document.createElement("ol");
+        actionsList.className = "advice-list";
+
+        (simulation.action_plan || []).forEach(action => {
+
+            const li = document.createElement("li");
+            li.textContent = action;
+
+            actionsList.appendChild(li);
+        });
+
+        panel.appendChild(actionsList);
+
+        // Ipotesi e limitazioni
 
         const detailsButton = addText(
             panel,
             "button",
             "details-button",
-            "Mostra fonte e limitazioni ▾"
+            "Mostra ipotesi e limitazioni ▾"
         );
 
         detailsButton.type = "button";
 
-        const details = addText(panel, "div", "details-content", "");
+        const details = addText(
+            panel,
+            "div",
+            "details-content",
+            ""
+        );
 
-        const limitations = janara.limitations || [];
+        (simulation.limitations || []).forEach(item => {
 
-        limitations.forEach(item => {
             addText(
                 details,
                 "p",
                 "",
-                typeof item === "string" ? item : JSON.stringify(item)
+                item
             );
         });
 
-        const source = document.createElement("a");
-        source.href = "https://portaleprotezionecivile.regione.campania.it/";
-        source.target = "_blank";
-        source.rel = "noopener noreferrer";
-        source.textContent = "Protezione Civile Regione Campania";
-        details.appendChild(source);
-
         detailsButton.addEventListener("click", () => {
+
             const visible = details.classList.toggle("visible");
+
             detailsButton.textContent = visible
                 ? "Nascondi dettagli ▴"
-                : "Mostra fonte e limitazioni ▾";
+                : "Mostra ipotesi e limitazioni ▾";
         });
+
+        // Nota informativa
 
         addText(
             panel,
             "div",
             "result-footer",
-            "CitySync è uno strumento informativo di supporto e non sostituisce le comunicazioni ufficiali."
+            "Questa è una simulazione ipotetica, non la segnalazione di un evento reale. Le conseguenze non sono previsioni certe. Le decisioni operative spettano agli enti competenti."
         );
 
-        panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        panel.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest"
+        });
     }
 
     // -----------------------------------------------------
@@ -301,7 +333,11 @@
         const description = descriptionInput.value.trim();
 
         if (description.length < 10) {
-            showStatus("Descrivi lo scenario con almeno 10 caratteri.", "error");
+            showStatus(
+                "Descrivi lo scenario con almeno 10 caratteri.",
+                "error"
+            );
+
             descriptionInput.focus();
             return null;
         }
@@ -309,7 +345,11 @@
         const location = NP.geocoding.getSelectedLocation();
 
         if (!location) {
-            showStatus("Seleziona prima una località sulla mappa.", "error");
+            showStatus(
+                "Seleziona prima una località sulla mappa.",
+                "error"
+            );
+
             return null;
         }
 
@@ -332,18 +372,29 @@
 
     async function sendScenarioToBackend(scenarioData) {
 
-        if (activeController) activeController.abort();
+        if (activeController) {
+            activeController.abort();
+        }
 
         activeController = new AbortController();
         const controller = activeController;
 
         startButton.disabled = true;
-        startButton.textContent = "Analisi in corso...";
+        startButton.textContent = "Simulazione in corso...";
 
-        showStatus("Janara sta analizzando lo scenario...", "");
+        showStatus(
+            "CitySync sta simulando lo scenario...",
+            ""
+        );
 
         const panel = createResultPanel();
-        addText(panel, "div", "result-heading", "Analisi in corso...");
+
+        addText(
+            panel,
+            "div",
+            "result-heading",
+            "Simulazione in corso..."
+        );
 
         try {
 
@@ -361,39 +412,63 @@
 
             if (!response.ok) {
                 throw new Error(
-                    responseData.detail || "Errore durante l'elaborazione dello scenario."
+                    responseData.detail ||
+                    "Errore durante l'elaborazione dello scenario."
                 );
             }
 
-            if (activeController !== controller) return;
+            if (activeController !== controller) {
+                return;
+            }
 
             currentRequest = {
                 ...scenarioData,
                 response: responseData
             };
 
-            showStatus("Analisi completata.", "success");
+            showStatus(
+                "Simulazione completata.",
+                "success"
+            );
 
             renderResult(responseData);
 
         } catch (error) {
 
-            if (error.name === "AbortError") return;
+            if (error.name === "AbortError") {
+                return;
+            }
 
             console.error("CitySync - Errore:", error);
 
-            showStatus("Errore durante l'analisi: " + error.message, "error");
+            showStatus(
+                "Errore durante la simulazione: " + error.message,
+                "error"
+            );
 
             const errorPanel = createResultPanel();
 
-            addText(errorPanel, "div", "result-heading", "Analisi non disponibile");
-            addText(errorPanel, "p", "result-summary", error.message);
+            addText(
+                errorPanel,
+                "div",
+                "result-heading",
+                "Simulazione non disponibile"
+            );
+
+            addText(
+                errorPanel,
+                "p",
+                "result-summary",
+                error.message
+            );
 
         } finally {
 
             if (activeController === controller) {
+
                 activeController = null;
                 startButton.disabled = false;
+
                 startButton.innerHTML =
                     '<i class="ph-fill ph-play"></i> Avvia scenario';
             }
@@ -405,8 +480,12 @@
     // -----------------------------------------------------
 
     async function avviaScenario() {
+
         const scenarioData = collectScenarioData();
-        if (!scenarioData) return;
+
+        if (!scenarioData) {
+            return;
+        }
 
         await sendScenarioToBackend(scenarioData);
     }
@@ -424,10 +503,15 @@
         showStatus("", "");
 
         const panel = document.getElementById("citysync-result");
-        if (panel) panel.remove();
+
+        if (panel) {
+            panel.remove();
+        }
 
         logElement.replaceChildren();
+
         startButton.disabled = false;
+
         startButton.innerHTML =
             '<i class="ph-fill ph-play"></i> Avvia scenario';
     }
