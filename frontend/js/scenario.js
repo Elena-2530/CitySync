@@ -11,8 +11,7 @@
     const statusElement = document.getElementById("scenario-status");
     const logElement = document.getElementById("log");
 
-    const API_URL = "http://127.0.0.1:8000/api/scenarios/analyze";
-
+    const API_URL = "https://citysync-1-0jom.onrender.com/api/scenarios/analyze";
     let currentRequest = null;
     let activeController = null;
 
