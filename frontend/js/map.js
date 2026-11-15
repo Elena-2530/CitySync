@@ -5,9 +5,7 @@
 
 (function (NP) {
 
-    // -----------------------------------------------------
     // 1. INIZIALIZZAZIONE MAPPA
-    // -----------------------------------------------------
 
     const map = L.map("map", {
         zoomControl: true
@@ -47,51 +45,28 @@
     map.zoomControl.setPosition("bottomright");
 
 
-    // -----------------------------------------------------
     // 2. ELEMENTI HTML
-    // -----------------------------------------------------
 
-    const searchForm = document.getElementById(
-        "location-search-form"
-    );
-
-    const searchInput = document.getElementById(
-        "location-search-input"
-    );
-
-    const searchButton = document.getElementById(
-        "location-search-button"
-    );
-
-    const searchStatus = document.getElementById(
-        "location-search-status"
-    );
-
-    const searchResults = document.getElementById(
-        "location-search-results"
-    );
-
-    const locationLabel = document.getElementById(
-        "map-location-label"
-    );
+    const searchForm = document.getElementById("location-search-form");
+    const searchInput = document.getElementById("location-search-input");
+    const searchButton = document.getElementById("location-search-button");
+    const searchStatus = document.getElementById("location-search-status");
+    const searchResults = document.getElementById("location-search-results");
+    const locationLabel = document.getElementById("map-location-label");
 
 
-    // -----------------------------------------------------
-    // 3. STATO DELLA RICERCA
-    // -----------------------------------------------------
+    // 3. STATO
 
     let selectedMarker = null;
+    let analysisMarker = null;
     let activeRequest = null;
-
-    // Posizione selezionata dall'utente.
     let selectedLocation = null;
 
 
-    // -----------------------------------------------------
     // 4. FUNZIONI DI SUPPORTO
-    // -----------------------------------------------------
 
     function showStatus(message, type = "") {
+        if (!searchStatus) return;
 
         searchStatus.textContent = message;
         searchStatus.className = "search-status";
@@ -101,40 +76,47 @@
         }
     }
 
-
     function clearResults() {
-
-        searchResults.replaceChildren();
+        if (searchResults) {
+            searchResults.replaceChildren();
+        }
     }
-
 
     function setLoading(loading) {
+        if (!searchButton) return;
 
         searchButton.disabled = loading;
+        searchButton.textContent = loading ? "Ricerca..." : "Cerca";
+    }
 
-        searchButton.textContent = loading
-            ? "Ricerca..."
-            : "Cerca";
+    function escapeHTML(value) {
+        return String(value ?? "").replace(/[&<>"']/g, character => {
+            const entities = {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;"
+            };
+
+            return entities[character];
+        });
     }
 
 
-    // -----------------------------------------------------
-    // 5. RICERCA NEL BACKEND
-    // -----------------------------------------------------
+    // 5. RICERCA GEOGRAFICA
 
     async function searchLocation(query) {
 
-        // Interrompe un'eventuale ricerca precedente.
         if (activeRequest) {
             activeRequest.abort();
         }
 
-        activeRequest = new AbortController();
+        const controller = new AbortController();
+        activeRequest = controller;
 
         clearResults();
-
         showStatus("Ricerca delle località in corso...");
-
         setLoading(true);
 
         try {
@@ -150,7 +132,7 @@
                 headers: {
                     "Accept": "application/json"
                 },
-                signal: activeRequest.signal
+                signal: controller.signal
             });
 
             if (!response.ok) {
@@ -164,9 +146,7 @@
                     if (typeof errorData.detail === "string") {
                         errorMessage = errorData.detail;
                     }
-                } catch (_) {
-                    // Mantiene il messaggio predefinito.
-                }
+                } catch (_) {}
 
                 throw new Error(errorMessage);
             }
@@ -174,11 +154,9 @@
             const data = await response.json();
 
             if (!data.results || data.results.length === 0) {
-
                 showStatus(
-                    "Nessuna località trovata. Prova a inserire un indirizzo più preciso."
+                    "Nessuna località trovata. Prova con un indirizzo più preciso."
                 );
-
                 return;
             }
 
@@ -190,9 +168,7 @@
 
         } catch (error) {
 
-            if (error.name === "AbortError") {
-                return;
-            }
+            if (error.name === "AbortError") return;
 
             console.error("Errore geocodifica:", error);
 
@@ -203,67 +179,52 @@
 
         } finally {
 
-            // Evita che una vecchia richiesta sblocchi
-            // il pulsante mentre una nuova è ancora in corso.
-            if (!activeRequest || !activeRequest.signal.aborted) {
+            if (activeRequest === controller) {
+                activeRequest = null;
                 setLoading(false);
             }
         }
     }
 
 
-    // -----------------------------------------------------
-    // 6. VISUALIZZAZIONE RISULTATI
-    // -----------------------------------------------------
+    // 6. RISULTATI DELLA RICERCA
 
     function renderResults(results) {
 
         clearResults();
 
-        results.forEach((result) => {
+        results.forEach(result => {
 
             const button = document.createElement("button");
-
             button.type = "button";
             button.className = "search-result";
 
             const icon = document.createElement("i");
-
             icon.className = "ph ph-map-pin";
 
             const content = document.createElement("div");
-
             content.className = "search-result-content";
 
             const name = document.createElement("strong");
-
-            name.textContent =
-                result.name || "Località senza nome";
+            name.textContent = result.name || "Località senza nome";
 
             const address = document.createElement("span");
-
             address.textContent =
                 result.display_name || "Indirizzo non disponibile";
 
             content.append(name, address);
-
             button.append(icon, content);
 
             button.addEventListener("click", () => {
-
                 selectLocation(result);
-
             });
 
             searchResults.appendChild(button);
-
         });
     }
 
 
-    // -----------------------------------------------------
     // 7. SELEZIONE DELLA LOCALITÀ
-    // -----------------------------------------------------
 
     function selectLocation(location) {
 
@@ -278,40 +239,32 @@
             longitude < -180 ||
             longitude > 180
         ) {
-
             showStatus(
                 "Le coordinate della località non sono valide.",
                 "error"
             );
-
             return;
         }
 
-        // Memorizza la posizione selezionata.
         selectedLocation = {
             name: location.name,
             display_name: location.display_name,
-            latitude: latitude,
-            longitude: longitude,
+            latitude,
+            longitude,
             osm_type: location.osm_type,
             osm_id: location.osm_id
         };
 
-        // Centra la mappa.
         map.flyTo(
             [latitude, longitude],
             16,
-            {
-                duration: 1.5
-            }
+            { duration: 1.5 }
         );
 
-        // Rimuove il precedente indicatore.
         if (selectedMarker) {
             map.removeLayer(selectedMarker);
         }
 
-        // Crea il nuovo indicatore.
         selectedMarker = L.marker(
             [latitude, longitude]
         ).addTo(map);
@@ -320,11 +273,14 @@
             `<strong>${escapeHTML(location.name || "Località selezionata")}</strong>`
         ).openPopup();
 
-        // Aggiorna il testo sopra la mappa.
-        locationLabel.textContent =
-            location.display_name || location.name;
+        // Una nuova località richiede una nuova analisi.
+        clearAnalysisMarker();
 
-        // Nasconde i risultati.
+        if (locationLabel) {
+            locationLabel.textContent =
+                location.display_name || location.name;
+        }
+
         clearResults();
 
         showStatus(
@@ -333,68 +289,147 @@
         );
 
         console.log(
-            "Località selezionata per CitySync:",
+            "CitySync - Località selezionata:",
             selectedLocation
         );
-
     }
 
 
-    // -----------------------------------------------------
-    // 8. PROTEZIONE TESTO POPUP
-    // -----------------------------------------------------
+    // 8. RISULTATI DELL'ANALISI SULLA MAPPA
 
-    function escapeHTML(value) {
+    function clearAnalysisMarker() {
 
-        return String(value).replace(/[&<>"']/g, (character) => {
+        if (analysisMarker) {
+            map.removeLayer(analysisMarker);
+            analysisMarker = null;
+        }
+    }
 
-            const entities = {
-                "&": "&amp;",
-                "<": "&lt;",
-                ">": "&gt;",
-                '"': "&quot;",
-                "'": "&#039;"
-            };
+    function showAnalysis(data) {
 
-            return entities[character];
+        const scenario = data.scenario || {};
+        const location = scenario.location || selectedLocation;
 
+        if (!location) return;
+
+        const latitude = Number(location.latitude);
+        const longitude = Number(location.longitude);
+
+        if (
+            !Number.isFinite(latitude) ||
+            !Number.isFinite(longitude)
+        ) {
+            return;
+        }
+
+        const janara = data.janara || {};
+        const responseText =
+            typeof janara.response === "string"
+                ? janara.response
+                : "Analisi completata da Janara.";
+
+        const alertMatch = responseText.match(
+            /allerta ufficiale attiva[^:]*:\s*([^\.\n]+)/i
+        );
+
+        const levelMatch = responseText.match(
+            /livello di allerta:\s*([^\.\n]+)/i
+        );
+
+        const zoneMatch = responseText.match(
+            /Zona\s+\d+:\s*([^\.\n]+)/i
+        );
+
+        const alertCode = alertMatch
+            ? alertMatch[1].trim()
+            : "Verificare il dettaglio dell'analisi";
+
+        const alertLevel = levelMatch
+            ? levelMatch[1].trim()
+            : "Non specificato";
+
+        const zone = zoneMatch
+            ? zoneMatch[1].trim()
+            : "Non specificata";
+
+        clearAnalysisMarker();
+
+        // Non disegniamo un'area geografica non disponibile.
+        // Il marker indica esclusivamente la località analizzata.
+
+        analysisMarker = L.marker(
+            [latitude, longitude],
+            {
+                title: "Risultato analisi CitySync"
+            }
+        ).addTo(map);
+
+        const popup = `
+            <div class="citysync-map-popup">
+                <strong>Analisi CitySync</strong>
+                <hr>
+                <b>Località:</b>
+                ${escapeHTML(location.display_name || location.name)}
+                <br><br>
+                <b>Allerta:</b>
+                ${escapeHTML(alertCode)}
+                <br>
+                <b>Livello:</b>
+                ${escapeHTML(alertLevel)}
+                <br>
+                <b>Zona:</b>
+                ${escapeHTML(zone)}
+                <hr>
+                <small>
+                    Il marker indica la località analizzata,
+                    non il confine geografico dell'area di allerta.
+                </small>
+            </div>
+        `;
+
+        analysisMarker.bindPopup(popup).openPopup();
+
+        map.flyTo(
+            [latitude, longitude],
+            Math.max(map.getZoom(), 14),
+            { duration: 1.2 }
+        );
+
+        console.log(
+            "CitySync - Marker dell'analisi aggiornato:",
+            location
+        );
+    }
+
+
+    // 9. EVENTO FORM DI RICERCA
+
+    if (searchForm) {
+
+        searchForm.addEventListener("submit", event => {
+
+            event.preventDefault();
+
+            const query = searchInput.value.trim();
+
+            if (query.length < 2) {
+                showStatus(
+                    "Inserisci almeno due caratteri.",
+                    "error"
+                );
+                return;
+            }
+
+            searchLocation(query);
         });
     }
 
 
-    // -----------------------------------------------------
-    // 9. EVENTO INVIO FORM
-    // -----------------------------------------------------
-
-    searchForm.addEventListener("submit", (event) => {
-
-        event.preventDefault();
-
-        const query = searchInput.value.trim();
-
-        if (query.length < 2) {
-
-            showStatus(
-                "Inserisci almeno due caratteri.",
-                "error"
-            );
-
-            return;
-        }
-
-        searchLocation(query);
-
-    });
-
-
-    // -----------------------------------------------------
-    // 10. ESPORTAZIONE NEL NAMESPACE CITYSYNC
-    // -----------------------------------------------------
+    // 10. ESPORTAZIONE FUNZIONI
 
     NP.map = map;
 
     NP.geocoding = {
-
         search: searchLocation,
 
         getSelectedLocation: function () {
@@ -402,7 +437,11 @@
         },
 
         selectLocation: selectLocation
-
     };
 
-})((globalThis.NP = globalThis.NP || {}));
+    NP.mapAnalysis = {
+        show: showAnalysis,
+        clear: clearAnalysisMarker
+    };
+
+})(globalThis.NP = globalThis.NP || {});

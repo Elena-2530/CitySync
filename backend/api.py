@@ -10,11 +10,13 @@ from services.geocoding import (
     search_nominatim,
 )
 
+from agents.janara_orchestrator_agent import handle_request
+
 
 app = FastAPI(
     title="CitySync API",
     description="API per la geolocalizzazione e il coordinamento degli agenti CitySync",
-    version="1.1.0",
+    version="1.2.0",
 )
 
 
@@ -39,7 +41,7 @@ app.add_middleware(
 
 
 # ---------------------------------------------------------
-# 2. MODELLI DATI DELLO SCENARIO
+# 2. MODELLI DATI
 # ---------------------------------------------------------
 
 class ScenarioLocation(BaseModel):
@@ -121,36 +123,63 @@ def geocode_location(
             "source": "OpenStreetMap Nominatim",
         }
 
-    except Exception as error:
+    except Exception:
         raise HTTPException(
             status_code=503,
-            detail=f"Servizio di geolocalizzazione non disponibile: {error}",
+            detail="Servizio di geolocalizzazione non disponibile.",
         )
 
 
 # ---------------------------------------------------------
-# 5. RICEZIONE SCENARI PER JANARA
+# 5. ANALISI SCENARI CON JANARA
 # ---------------------------------------------------------
 
 @app.post("/api/scenarios/analyze")
 def analyze_scenario(scenario: ScenarioRequest):
     """
-    Riceve e valida uno scenario.
-    Prepara i dati per il successivo coordinamento di Janara.
-    In questa fase non avvia ancora gli agenti AI.
+    Riceve uno scenario dal frontend e lo inoltra a Janara.
+    Janara coordina gli agenti specializzati e restituisce
+    il risultato dell'analisi.
     """
 
     scenario_id = str(uuid4())
 
     scenario_data = scenario.dict()
 
-    return {
-        "scenario_id": scenario_id,
-        "status": "received",
-        "message": "Scenario ricevuto e validato correttamente.",
-        "janara": {
-            "status": "pending",
-            "message": "Richiesta pronta per il coordinamento.",
+    janara_request = {
+        "request_id": scenario_id,
+        "sender": "operator",
+        "request_type": "question",
+        "question": scenario.description,
+        "context": {
+            "location": scenario.location.display_name,
+            "name": scenario.location.name,
+            "latitude": scenario.location.latitude,
+            "longitude": scenario.location.longitude,
+            "osm_type": scenario.location.osm_type,
+            "osm_id": scenario.location.osm_id,
         },
-        "scenario": scenario_data,
     }
+
+    try:
+        janara_result = handle_request(janara_request)
+
+        janara_status = (
+            janara_result.get("status", "unknown")
+            if isinstance(janara_result, dict)
+            else "unknown"
+        )
+
+        return {
+            "scenario_id": scenario_id,
+            "status": janara_status,
+            "message": "Scenario elaborato da Janara.",
+            "janara": janara_result,
+            "scenario": scenario_data,
+        }
+
+    except Exception:
+        raise HTTPException(
+            status_code=500,
+            detail="Errore durante il coordinamento degli agenti da parte di Janara.",
+        )
