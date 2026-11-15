@@ -1,104 +1,220 @@
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <title>CITYSYNC | Urban Intelligence</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+    <!-- Configurazione responsive -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Informazioni pagina -->
+    <meta name="description" content="CitySync: piattaforma intelligente per il monitoraggio urbano, la sicurezza, la mobilità e la gestione delle informazioni territoriali.">
+    <meta name="theme-color" content="#0f172a">
+
+    <title>CitySync | Urban Intelligence</title>
+
+    <!-- Leaflet -->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+
+    <!-- Stili CitySync -->
     <link rel="stylesheet" href="css/style.css">
-    <!-- Libreria icone vettoriali Phosphor Icons -->
+
+    <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
+
 <body>
+
     <header class="topbar">
         <div class="brand">
             <span class="brand-icon">N</span>
+
             <div>
                 <h1>CitySync</h1>
                 <span>URBAN INTELLIGENCE PLATFORM</span>
             </div>
         </div>
-       
     </header>
 
     <main class="dashboard">
+
         <aside class="sidebar">
+
             <!-- Control Center -->
             <section class="panel-section">
-                <h2><i class="ph ph-target"></i> Control Center</h2>
+                <h2>
+                    <i class="ph ph-target"></i>
+                    Control Center
+                </h2>
+
                 <div class="sim-controls">
-                    <button id="btn-avvia" class="btn primary"><i class="ph-fill ph-play"></i> Avvia scenario</button>
-                    <button id="btn-reset" class="btn"><i class="ph ph-arrow-counter-clockwise"></i> Reset</button>
+                    <button id="btn-avvia" class="btn primary">
+                        <i class="ph-fill ph-play"></i>
+                        Avvia scenario
+                    </button>
+
+                    <button id="btn-reset" class="btn">
+                        <i class="ph ph-arrow-counter-clockwise"></i>
+                        Reset
+                    </button>
                 </div>
-                <!-- Orologio fisso nascosto di default -->
-                <div id="sim-clock" class="clock" style="display: none;">15:30</div>
+
+                <div id="sim-clock" class="clock" style="display: none;">
+                    15:30
+                </div>
             </section>
 
             <!-- Panoramica -->
             <section class="panel-section">
-                <h2><i class="ph ph-chart-bar"></i> Panoramica</h2>
+                <h2>
+                    <i class="ph ph-chart-bar"></i>
+                    Panoramica
+                </h2>
+
                 <div class="stats">
-                    <div class="stat-card"><strong>0</strong><span><i class="ph ph-calendar-blank"></i> Eventi</span></div>
-                    <div class="stat-card"><strong>0</strong><span><i class="ph ph-warning"></i> Criticità</span></div>
-                    <div class="stat-card"><strong>0</strong><span><i class="ph ph-check-square"></i> Azioni</span></div>
-                </div>
-            </section>
+                    <div class="stat-card">
+                        <strong>0</strong>
+                        <span>
+                            <i class="ph ph-calendar-blank"></i>
+                            Eventi
+                        </span>
+                    </div>
 
-            <!-- Raccomandazioni dell'orchestratore -->
-            <section class="panel-section">
-                <h2><i class="ph ph-lightbulb"></i> Raccomandazioni dell'orchestratore</h2>
-                <!-- Vuoto per ora -->
-            </section>
+                    <div class="stat-card">
+                        <strong>0</strong>
+                        <span>
+                            <i class="ph ph-warning"></i>
+                            Criticità
+                        </span>
+                    </div>
 
-            <!-- Registro Decisioni -->
-            <section class="panel-section">
-                <h2><i class="ph ph-list-checks"></i> Registro decisioni</h2>
-                <div id="log" class="log">
-                    <div class="empty-message">In attesa di eventi...</div>
-                </div>
-            </section>
-
-            <!-- Livelli Cartografici con icone -->
-            <section class="panel-section">
-                <h2><i class="ph ph-layers"></i> Livelli cartografici</h2>
-                <div class="layer-option">
-                    <input type="checkbox" id="chk-mobilita" class="layer-toggle" value="transport" checked>
-                    <label for="chk-mobilita"><i class="ph ph-bus"></i> Mobilità e trasporti</label>
-                </div>
-                <div class="layer-option">
-                    <input type="checkbox" id="chk-turismo" class="layer-toggle" value="tourism">
-                    <label for="chk-turismo"><i class="ph ph-camera"></i> Turismo e punti di interesse</label>
-                </div>
-                <div class="layer-option">
-                    <input type="checkbox" id="chk-affollamento" class="layer-toggle" value="events">
-                    <label for="chk-affollamento"><i class="ph ph-users"></i> Affollamento</label>
-                </div>
-                <div class="layer-option">
-                    <input type="checkbox" id="chk-meteo" class="layer-toggle" value="weather">
-                    <label for="chk-meteo"><i class="ph ph-cloud-rain"></i> Meteo</label>
-                </div>
-            </section>
-        </aside>
-
-        <!-- Contenitore Mappa Fluttuante -->
-        <section class="map-container"> 
-           
-                <div class="map-header">
-                    <i class="ph ph-map-trifold"></i>
-                    <div>
-                        <h2>Mappa territoriale</h2>
-                        <p>Napoli, Campania – clic su una raccomandazione per inquadrarla</p>
+                    <div class="stat-card">
+                        <strong>0</strong>
+                        <span>
+                            <i class="ph ph-check-square"></i>
+                            Azioni
+                        </span>
                     </div>
                 </div>
-                <div id="map"></div> 
-            
-          
+            </section>
+
+            <!-- Raccomandazioni -->
+            <section class="panel-section">
+                <h2>
+                    <i class="ph ph-lightbulb"></i>
+                    Raccomandazioni dell'orchestratore
+                </h2>
+            </section>
+
+            <!-- Registro decisioni -->
+            <section class="panel-section">
+                <h2>
+                    <i class="ph ph-list-checks"></i>
+                    Registro decisioni
+                </h2>
+
+                <div id="log" class="log">
+                    <div class="empty-message">
+                        In attesa di eventi...
+                    </div>
+                </div>
+            </section>
+
+            <!-- Livelli cartografici -->
+            <section class="panel-section">
+                <h2>
+                    <i class="ph ph-layers"></i>
+                    Livelli cartografici
+                </h2>
+
+                <div class="layer-option">
+                    <input
+                        type="checkbox"
+                        id="chk-mobilita"
+                        class="layer-toggle"
+                        value="transport"
+                        checked
+                    >
+                    <label for="chk-mobilita">
+                        <i class="ph ph-bus"></i>
+                        Mobilità e trasporti
+                    </label>
+                </div>
+
+                <div class="layer-option">
+                    <input
+                        type="checkbox"
+                        id="chk-turismo"
+                        class="layer-toggle"
+                        value="tourism"
+                    >
+                    <label for="chk-turismo">
+                        <i class="ph ph-camera"></i>
+                        Turismo e punti di interesse
+                    </label>
+                </div>
+
+                <div class="layer-option">
+                    <input
+                        type="checkbox"
+                        id="chk-affollamento"
+                        class="layer-toggle"
+                        value="events"
+                    >
+                    <label for="chk-affollamento">
+                        <i class="ph ph-users"></i>
+                        Affollamento
+                    </label>
+                </div>
+
+                <div class="layer-option">
+                    <input
+                        type="checkbox"
+                        id="chk-meteo"
+                        class="layer-toggle"
+                        value="weather"
+                    >
+                    <label for="chk-meteo">
+                        <i class="ph ph-cloud-rain"></i>
+                        Meteo
+                    </label>
+                </div>
+            </section>
+
+        </aside>
+
+        <!-- Mappa -->
+        <section class="map-container">
+
+            <div class="map-header">
+                <i class="ph ph-map-trifold"></i>
+
+                <div>
+                    <h2>Mappa territoriale</h2>
+                    <p>
+                        Napoli, Campania – clic su una raccomandazione
+                        per inquadrarla
+                    </p>
+                </div>
+            </div>
+
+            <div id="map"></div>
+
         </section>
+
     </main>
 
+    <!-- Librerie -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Applicazione attuale -->
     <script src="js/data.js"></script>
     <script src="js/map.js"></script>
     <script src="js/layers.js"></script>
     <script src="js/scenario.js"></script>
+
 </body>
 </html>

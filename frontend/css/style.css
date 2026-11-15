@@ -1,242 +1,713 @@
-* { margin: 0; padding: 0; box-sizing: border-box; }
 
-body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    /* Sfondo generale grigio chiarissimo/neutro */
-    background: #f0f4f8; 
-    /* Colore testo principale scuro */
-    color: #334155; 
-    height: 100vh;
-    overflow: hidden;
+/* =========================================================
+   CITYSYNC - STILI GENERALI
+   ========================================================= */
+
+:root {
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --primary-light: #eff6ff;
+
+    --navy: #0f172a;
+    --text: #334155;
+    --muted: #64748b;
+
+    --background: #f0f4f8;
+    --surface: #ffffff;
+    --surface-soft: #f8fafc;
+
+    --border: #e2e8f0;
+    --success: #16a34a;
+    --warning: #f59e0b;
+    --danger: #dc2626;
+
+    --topbar-height: 75px;
+    --sidebar-width: 340px;
+
+    --radius: 12px;
+    --shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
 }
 
-/* HEADER E SIDEBAR (Tema Chiaro) */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    min-width: 320px;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Roboto, sans-serif;
+
+    background: var(--background);
+    color: var(--text);
+
+    min-height: 100vh;
+    min-height: 100dvh;
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
 .topbar {
-    height: 75px;
-    background: #ffffff; /* Sfondo bianco puro */
-    border-bottom: 1px solid #e2e8f0; /* Bordo grigio chiaro */
+    min-height: var(--topbar-height);
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 28px;
+
+    padding: 12px 28px;
+
+    position: relative;
+    z-index: 1000;
 }
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.brand-icon {
+    background: var(--primary);
+    color: white;
+
+    width: 46px;
+    height: 46px;
+
+    font-size: 24px;
+    font-weight: 900;
+
+    border-radius: 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    box-shadow: 0 4px 10px rgba(59, 130, 246, 0.25);
+}
+
+.brand h1 {
+    font-size: 20px;
+    letter-spacing: 0.5px;
+    color: var(--navy);
+    margin-bottom: 2px;
+}
+
+.brand span:last-child {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1px;
+}
+
+/* =========================================================
+   DASHBOARD
+   ========================================================= */
+
+.dashboard {
+    display: grid;
+    grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+
+    min-height: calc(100vh - var(--topbar-height));
+    min-height: calc(100dvh - var(--topbar-height));
+}
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
 
 .sidebar {
-    width: 380px;
-    flex-shrink: 0;
-    background: #ffffff;
-    border-right: 1px solid #e2e8f0;
+    min-width: 0;
+
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+
     padding: 24px 20px;
+
     overflow-y: auto;
+    overscroll-behavior: contain;
 }
 
-.brand { display: flex; align-items: center; gap: 12px; }
-.brand-icon { 
-    background: #3b82f6; /* Blu del mockup */
-    color: white; 
-    font-size: 24px; 
-    font-weight: 900; 
-    font-style: normal; 
-    padding: 8px 14px; 
-    border-radius: 14px; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+.panel-section {
+    margin-bottom: 28px;
 }
-.brand h1 { font-size: 20px; letter-spacing: 0.5px; color: #0f172a; margin-bottom: 2px;}
-.brand span:last-child { font-size: 10px; color: #64748b; letter-spacing: 1px; }
-.system-status { font-size: 12px; color: #64748b; display: flex; align-items: center;}
-.status-dot { display: inline-block; width: 8px; height: 8px; background: #22c55e; border-radius: 50%; margin-right: 8px; box-shadow: 0 0 8px rgba(34, 197, 94, 0.4);}
 
-.dashboard { display: flex; height: calc(100vh - 75px); }
+.panel-section h2 {
+    font-size: 15px;
+    margin-bottom: 16px;
 
-.panel-section { margin-bottom: 28px; }
+    display: flex;
+    align-items: center;
+    gap: 10px;
 
-/* Evita che le icone si schiaccino */
-i.ph, i.ph-fill {
+    color: #1e293b;
+    font-weight: 600;
+}
+
+.panel-section h2 i {
+    font-size: 18px;
+    color: var(--primary);
+    flex-shrink: 0;
+}
+
+/* Icone */
+
+i.ph,
+i.ph-fill {
     flex-shrink: 0;
     display: inline-block;
 }
 
-.panel-section h2 { 
-    font-size: 15px; 
-    margin-bottom: 16px; 
-    display: flex; 
-    align-items: center; 
-    gap: 10px; 
-    color: #1e293b; /* Titoli scuri per massima leggibilità */
-    font-weight: 600;
+/* =========================================================
+   CONTROLLI SIMULAZIONE
+   ========================================================= */
+
+.sim-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
 }
-.panel-section h2 i { font-size: 18px; color: #3b82f6; }
 
-/* CONTROLLI SIMULAZIONE */
-.sim-controls { display: flex; gap: 10px; margin-bottom: 15px; }
-.clock { font-size: 38px; font-weight: bold; color: #3b82f6; letter-spacing: 2px; font-variant-numeric: tabular-nums; text-align: center; }
+.btn {
+    min-height: 42px;
 
-/* Pulsanti stile chiaro */
-.btn { 
-    background: #f8fafc; 
-    color: #334155; 
-    border: 1px solid #cbd5e1; 
-    border-radius: 8px; 
-    padding: 10px 16px; 
-    font-size: 13px; 
-    cursor: pointer; 
-    transition: all 0.2s ease;
+    background: var(--surface-soft);
+    color: var(--text);
+
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+
+    padding: 10px 16px;
+
+    font-size: 13px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
 }
-.btn:hover { background: #e2e8f0; }
 
-.btn.primary { 
-    background: #3b82f6; 
+.btn:hover {
+    background: var(--border);
+}
+
+.btn:focus-visible,
+.layer-option input:focus-visible + label {
+    outline: 3px solid rgba(37, 99, 235, 0.3);
+    outline-offset: 3px;
+}
+
+.btn.primary {
+    background: var(--primary);
     border: none;
     color: white;
-    flex: 1; 
-    font-weight: bold; 
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-}
-.btn.primary:hover { 
-    transform: scale(1.02);
-    background: #2563eb;
-    box-shadow: 0 6px 15px rgba(59, 130, 246, 0.4); 
+
+    flex: 1;
+    font-weight: bold;
+
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
 }
 
-/* STATISTICHE */
-.stats { display: flex; gap: 10px; }
-.stat-card { flex: 1; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 6px; }
-.stat-card strong { font-size: 24px; color: #0f172a; }
-.stat-card span { font-size: 10px; color: #64748b; display: flex; align-items: center; gap: 4px;}
-.stat-card span i { font-size: 14px; color: #f59e0b; }
+.btn.primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+}
 
-/* LIVELLI CARTOGRAFICI (CHECKBOX STILE CHIARO) */
-.layer-option { margin-bottom: 12px; }
-.layer-option input[type="checkbox"] { display: none; }
-.layer-option label {
+.clock {
+    font-size: 38px;
+    font-weight: bold;
+    color: var(--primary);
+    letter-spacing: 2px;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+}
+
+/* =========================================================
+   STATISTICHE
+   ========================================================= */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.stat-card {
+    min-width: 0;
+
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+
+    padding: 14px 10px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.stat-card strong {
+    font-size: 24px;
+    color: var(--navy);
+}
+
+.stat-card span {
+    font-size: 10px;
+    color: var(--muted);
+
     display: flex;
     align-items: center;
+    gap: 4px;
+}
+
+.stat-card span i {
+    font-size: 14px;
+    color: var(--warning);
+}
+
+/* =========================================================
+   LIVELLI CARTOGRAFICI
+   ========================================================= */
+
+.layer-option {
+    margin-bottom: 12px;
+}
+
+.layer-option input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+}
+
+.layer-option label {
+    min-height: 40px;
+
+    display: flex;
+    align-items: center;
+
     font-size: 13px;
     color: #475569;
+
     cursor: pointer;
     position: relative;
-    transition: color 0.3s ease;
-}
-.layer-option label i { font-size: 18px; margin-right: 8px; color: #64748b; }
 
-/* Cerchio vuoto */
+    transition: color 0.2s ease;
+}
+
+.layer-option label i {
+    font-size: 18px;
+    margin-right: 8px;
+    color: var(--muted);
+}
+
 .layer-option label::before {
     content: "";
+
     display: block;
     flex-shrink: 0;
+
     width: 18px;
     height: 18px;
-    border: 2px solid #cbd5e1; 
+
+    border: 2px solid #cbd5e1;
     border-radius: 50%;
-    background-color: #ffffff;
+
+    background-color: white;
     margin-right: 12px;
-    transition: all 0.3s ease;
+
+    transition: all 0.2s ease;
 }
 
-/* Spunta a 'V' */
 .layer-option label::after {
     content: "";
+
     position: absolute;
     left: 7px;
     top: 50%;
+
     margin-top: -6px;
+
     width: 4px;
     height: 8px;
+
     border: solid white;
     border-width: 0 2px 2px 0;
-    border-radius: 0;
-    background-color: transparent;
+
     transform: rotate(45deg) scale(0);
     transition: transform 0.2s ease;
 }
 
-/* Stato attivo checkbox */
-.layer-option input[type="checkbox"]:checked + label {
-    color: #0f172a;
-    font-weight: 500;
-}
-.layer-option input[type="checkbox"]:checked + label i {
-    color: #3b82f6;
-}
-.layer-option input[type="checkbox"]:checked + label::before {
-    background-color: #3b82f6; /* Sfondo azzurro acceso */
-    border-color: #3b82f6;
-    box-shadow: 0 0 8px rgba(59, 130, 246, 0.3);
-}
-.layer-option input[type="checkbox"]:checked + label::after {
-    transform: rotate(45deg) scale(1);
-}
-
-/* MAPPA FLUTTUANTE E CORNICE */
-.map-container { flex: 1; padding: 24px; display: flex; flex-direction: column; }
-.map-wrapper {
-    background: #ffffff; /* Sfondo bianco per staccare dal body */
-    border-radius: 16px;
-    border: 1px solid #e2e8f0;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    box-shadow: 0 10px 25px rgba(0,0,0, 0.05); /* Ombra leggera elegante */
-}
-.map-header { display: flex; align-items: center; margin-bottom: 16px; }
-.map-header i { font-size: 32px; color: #3b82f6; margin-right: 14px; }
-.map-header h2 { font-size: 18px; color: #0f172a; margin-bottom: 2px; }
-.map-header p { font-size: 12px; color: #64748b; margin-top: 2px;}
-
-#map { flex: 1; border-radius: 12px; border: 1px solid #e2e8f0; }
-
-.map-footer {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-top: 16px; padding: 12px 18px;
-    background: #f8fafc; border-radius: 10px;
-    font-size: 12px; color: #64748b;
-    border: 1px solid #e2e8f0;
-}
-.map-footer div { display: flex; align-items: center; gap: 8px; }
-.map-footer i { font-size: 16px; }
-
-/* LOG E REGISTRO */
-/* LOG E REGISTRO */
-.log { max-height: 240px; overflow-y: auto; }
-
-.log-line { 
-    display: grid; 
-    grid-template-columns: 50px 18px 1fr; /* Spazi ottimizzati per orario e icona */
-    gap: 10px; 
-    font-size: 12px; 
-    color: #475569; 
-    padding: 12px 0; 
-    border-bottom: 1px solid #e2e8f0; 
-    line-height: 1.5; 
-    align-items: start; /* Allinea gli elementi in alto in caso di testi lunghi */
-}
-
-/* Stile per l'orario */
-.log-line span:first-child { 
-    color: #64748b; 
-    font-variant-numeric: tabular-nums; 
-    font-size: 11px;
-    margin-top: 1px;
-}
-
-/* Stile per le nuove icone Phosphor */
-.log-line i {
-    font-size: 16px;
-    margin-top: 1px;
-}
-
-/* Stile per le etichette in grassetto (Sensori, Orchestratore, ecc.) */
-.log-line strong {
-    color: #0f172a;
+.layer-option input:checked + label {
+    color: var(--navy);
     font-weight: 600;
 }
 
-.empty-message { padding: 10px; color: #94a3b8; font-size: 12px; }
+.layer-option input:checked + label i {
+    color: var(--primary);
+}
+
+.layer-option input:checked + label::before {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.layer-option input:checked + label::after {
+    transform: rotate(45deg) scale(1);
+}
+
+/* =========================================================
+   MAPPA
+   ========================================================= */
+
+.map-container {
+    min-width: 0;
+    min-height: 0;
+
+    padding: 24px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.map-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    gap: 12px;
+}
+
+.map-header > i {
+    font-size: 32px;
+    color: var(--primary);
+    flex-shrink: 0;
+}
+
+.map-header h2 {
+    font-size: 18px;
+    color: var(--navy);
+    margin-bottom: 2px;
+}
+
+.map-header p {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+}
+
+#map {
+    width: 100%;
+    flex: 1;
+
+    min-height: 500px;
+
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+
+    z-index: 1;
+}
+
+/* =========================================================
+   LOG E REGISTRO
+   ========================================================= */
+
+.log {
+    max-height: 240px;
+    overflow-y: auto;
+}
+
+.log-line {
+    display: grid;
+    grid-template-columns: 50px 18px minmax(0, 1fr);
+
+    gap: 10px;
+
+    font-size: 12px;
+    color: #475569;
+
+    padding: 12px 0;
+
+    border-bottom: 1px solid var(--border);
+
+    line-height: 1.5;
+    align-items: start;
+}
+
+.log-line span:first-child {
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    font-size: 11px;
+}
+
+.log-line i {
+    font-size: 16px;
+}
+
+.log-line strong {
+    color: var(--navy);
+    font-weight: 600;
+}
+
+.empty-message {
+    padding: 10px;
+    color: #94a3b8;
+    font-size: 12px;
+}
+
+/* =========================================================
+   FOOTER MAPPA
+   ========================================================= */
+
+.map-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 12px;
+    flex-wrap: wrap;
+
+    margin-top: 16px;
+    padding: 12px 18px;
+
+    background: var(--surface-soft);
+    border-radius: 10px;
+
+    font-size: 12px;
+    color: var(--muted);
+
+    border: 1px solid var(--border);
+}
+
+.map-footer div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1024px) {
+
+    :root {
+        --sidebar-width: 290px;
+    }
+
+    .sidebar {
+        padding: 20px 16px;
+    }
+
+    .map-container {
+        padding: 18px;
+    }
+
+    .stat-card {
+        padding: 12px 8px;
+    }
+
+    .stat-card strong {
+        font-size: 21px;
+    }
+}
+
+/* =========================================================
+   SMARTPHONE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    :root {
+        --topbar-height: auto;
+    }
+
+    body {
+        overflow-x: hidden;
+    }
+
+    .topbar {
+        min-height: 66px;
+        padding: 10px 16px;
+    }
+
+    .brand-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 21px;
+    }
+
+    .brand h1 {
+        font-size: 18px;
+    }
+
+    .brand span:last-child {
+        font-size: 8px;
+        letter-spacing: 0.7px;
+    }
+
+    .dashboard {
+        display: flex;
+        flex-direction: column;
+
+        min-height: auto;
+    }
+
+    .sidebar {
+        width: 100%;
+        max-height: none;
+
+        overflow: visible;
+
+        padding: 20px 16px;
+
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .panel-section {
+        margin-bottom: 24px;
+    }
+
+    .panel-section h2 {
+        font-size: 14px;
+    }
+
+    .sim-controls {
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        min-height: 46px;
+    }
+
+    .stats {
+        gap: 8px;
+    }
+
+    .stat-card {
+        padding: 12px 8px;
+    }
+
+    .stat-card strong {
+        font-size: 22px;
+    }
+
+    .stat-card span {
+        font-size: 10px;
+    }
+
+    .layer-option {
+        margin-bottom: 8px;
+    }
+
+    .layer-option label {
+        min-height: 44px;
+    }
+
+    .map-container {
+        width: 100%;
+        min-height: 0;
+        padding: 16px;
+    }
+
+    .map-header {
+        margin-bottom: 12px;
+    }
+
+    .map-header > i {
+        font-size: 27px;
+    }
+
+    .map-header h2 {
+        font-size: 16px;
+    }
+
+    .map-header p {
+        font-size: 11px;
+    }
+
+    #map {
+        flex: none;
+        height: 55vh;
+        height: 55dvh;
+        min-height: 350px;
+        max-height: 600px;
+    }
+
+    .log {
+        max-height: 200px;
+    }
+
+    .map-footer {
+        padding: 12px;
+        font-size: 11px;
+    }
+}
+
+/* =========================================================
+   SMARTPHONE PICCOLI
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+    .topbar {
+        padding: 10px 12px;
+    }
+
+    .sidebar {
+        padding: 18px 12px;
+    }
+
+    .map-container {
+        padding: 12px;
+    }
+
+    .stats {
+        gap: 6px;
+    }
+
+    .stat-card strong {
+        font-size: 19px;
+    }
+
+    .stat-card span {
+        font-size: 9px;
+    }
+
+    #map {
+        min-height: 320px;
+    }
+}
+
+/* =========================================================
+   ACCESSIBILITÀ: RIDUZIONE ANIMAZIONI
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+    }
+}
