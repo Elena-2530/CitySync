@@ -1,0 +1,891 @@
+{
+ "meta": {
+  "name": "Luoghi turistici di Napoli (NEURAPOLIS)",
+  "generated": "2026-11-14",
+  "notes": "Descrizioni, posizioni e indirizzi non ufficiali sono di conoscenza generale e le coordinate sono approssimate. Gli orari sono riportati solo se trovati in una fonte, con tipo di fonte e data di aggiornamento: vanno comunque verificati presso il sito ufficiale."
+ },
+ "places": [
+  {
+   "id": "castel_nuovo",
+   "name": "Castel Nuovo (Maschio Angioino)",
+   "aliases": [
+    "castel nuovo",
+    "maschio angioino",
+    "museo civico di castel nuovo"
+   ],
+   "categories": [
+    "castle",
+    "museum"
+   ],
+   "neighborhood": "Municipio",
+   "address": "Piazza Municipio, 80133 Napoli",
+   "lat": 40.8383,
+   "lon": 14.2529,
+   "indoor": "indoor",
+   "description": "Fortezza fatta costruire da Carlo I d'Angiò a partire dal 1279 e poi trasformata dagli Aragonesi, con cinque torri cilindriche e, all'ingresso, l'Arco di Trionfo di Alfonso d'Aragona. Oggi ospita il Museo Civico.",
+   "highlights": [
+    "Arco di Trionfo di Alfonso d'Aragona",
+    "Cappella Palatina",
+    "Museo Civico"
+   ],
+   "hours": {
+    "status": "official",
+    "weekly": {
+     "mon": [
+      [
+       "09:00",
+       "18:00"
+      ]
+     ],
+     "tue": [
+      [
+       "09:00",
+       "18:00"
+      ]
+     ],
+     "wed": [
+      [
+       "09:00",
+       "18:00"
+      ]
+     ],
+     "thu": [
+      [
+       "09:00",
+       "18:00"
+      ]
+     ],
+     "fri": [
+      [
+       "09:00",
+       "18:00"
+      ]
+     ],
+     "sat": [
+      [
+       "09:00",
+       "18:00"
+      ]
+     ],
+     "sun": []
+    },
+    "last_entry": "17:30",
+    "closed_on_holidays": true,
+    "notes": "La fonte indica: aperto dal lunedì al sabato, esclusi i festivi, salvo aperture straordinarie; chiuso la domenica.",
+    "source": {
+     "name": "Comune di Napoli - scheda Castel Nuovo",
+     "type": "official",
+     "url": "https://www.comune.napoli.it/vivere-il-comune/luoghi/castel-nuovo-maschio-angioino/",
+     "as_of": "2026-10-20",
+     "retrieved": "2026-11-14"
+    }
+   },
+   "tickets": {
+    "info": "Intero 10 €; residenti a Napoli e Città Metropolitana 6 €; sotto i 18 anni gratuito.",
+    "source": {
+     "name": "Comune di Napoli - scheda Castel Nuovo",
+     "type": "official",
+     "url": "https://www.comune.napoli.it/vivere-il-comune/luoghi/castel-nuovo-maschio-angioino/",
+     "as_of": "2026-10-20",
+     "retrieved": "2026-11-14"
+    }
+   },
+   "basis": {
+    "description": "general_knowledge",
+    "address": "official",
+    "coordinates": "approximate"
+   }
+  },
+  {
+   "id": "piazza_plebiscito",
+   "name": "Piazza del Plebiscito",
+   "aliases": [
+    "piazza del plebiscito",
+    "plebiscito"
+   ],
+   "categories": [
+    "square"
+   ],
+   "neighborhood": "Municipio",
+   "address": "Piazza del Plebiscito, 80132 Napoli",
+   "lat": 40.8359,
+   "lon": 14.2488,
+   "indoor": "outdoor",
+   "description": "La grande piazza monumentale del centro, chiusa tra il Palazzo Reale e la Basilica di San Francesco di Paola con il suo colonnato neoclassico, realizzata nell'Ottocento.",
+   "highlights": [
+    "Basilica di San Francesco di Paola",
+    "Palazzo Reale",
+    "Colonnato"
+   ],
+   "hours": {
+    "status": "open_air",
+    "weekly": null,
+    "last_entry": null,
+    "closed_on_holidays": false,
+    "notes": "Luogo all'aperto o di passaggio: non risulta un orario d'ingresso. L'accesso può essere limitato di notte o in occasione di eventi.",
+    "source": null
+   },
+   "tickets": null,
+   "basis": {
+    "description": "general_knowledge",
+    "address": "general_knowledge",
+    "coordinates": "approximate"
+   }
+  },
+  {
+   "id": "palazzo_reale",
+   "name": "Palazzo Reale di Napoli",
+   "aliases": [
+    "palazzo reale",
+    "reggia di napoli"
+   ],
+   "categories": [
+    "palace",
+    "museum"
+   ],
+   "neighborhood": "Municipio",
+   "address": "Piazza del Plebiscito 1, 80132 Napoli",
+   "lat": 40.8362,
+   "lon": 14.25,
+   "indoor": "indoor",
+   "description": "Residenza dei viceré spagnoli e poi dei Borbone, iniziata all'inizio del Seicento su progetto di Domenico Fontana. Conserva gli appartamenti storici, il Teatrino di Corte e la Biblioteca Nazionale; il Giardino Pensile affaccia sul golfo.",
+   "highlights": [
+    "Appartamento storico",
+    "Teatrino di Corte",
+    "Giardino Pensile"
+   ],
+   "hours": {
+    "status": "official",
+    "weekly": {
+     "mon": [
+      [
+       "09:00",
+       "20:00"
+      ]
+     ],
+     "tue": [
+      [
+       "09:00",
+       "20:00"
+      ]
+     ],
+     "wed": [],
+     "thu": [
+      [
+       "09:00",
+       "20:00"
+      ]
+     ],
+     "fri": [
+      [
+       "09:00",
+       "20:00"
+      ]
+     ],
+     "sat": [
+      [
+       "09:00",
+       "20:00"
+      ]
+     ],
+     "sun": [
+      [
+       "09:00",
+       "20:00"
+      ]
+     ]
+    },
+    "last_entry": "19:00",
+    "closed_on_holidays": false,
+    "notes": "La fonte indica: aperto tutti i giorni 9-20, ultimo ingresso alle 19, chiuso il mercoledì. Alcune sezioni (Galleria del Tempo, Museo Caruso, Giardino Romantico) hanno orari propri.",
+    "source": {
+     "name": "Ministero della Cultura - scheda Palazzo Reale di Napoli",
+     "type": "official",
+     "url": "https://cultura.gov.it/luogo/palazzo-reale-di-napoli-1",
+     "as_of": null,
+     "retrieved": "2026-11-14"
+    }
+   },
+   "tickets": {
+    "info": "Museo: intero 15 €; 18-24 anni 2 €; sotto i 18 anni gratuito.",
+    "source": {
+     "name": "Ministero della Cultura - scheda Palazzo Reale di Napoli",
+     "type": "official",
+     "url": "https://cultura.gov.it/luogo/palazzo-reale-di-napoli-1",
+     "as_of": null,
+     "retrieved": "2026-11-14"
+    }
+   },
+   "basis": {
+    "description": "general_knowledge",
+    "address": "general_knowledge",
+    "coordinates": "approximate"
+   }
+  },
+  {
+   "id": "teatro_san_carlo",
+   "name": "Teatro di San Carlo",
+   "aliases": [
+    "teatro san carlo",
+    "teatro di san carlo",
+    "san carlo"
+   ],
+   "categories": [
+    "theatre"
+   ],
+   "neighborhood": "Municipio",
+   "address": "Via San Carlo 98, Napoli",
+   "lat": 40.8379,
+   "lon": 14.249,
+   "indoor": "indoor",
+   "description": "Inaugurato nel 1737 sotto Carlo di Borbone, è uno dei più antichi teatri d'opera ancora in attività al mondo.",
+   "highlights": [
+    "Sala a ferro di cavallo",
+    "Palco reale",
+    "Museo MeMus"
+   ],
+   "hours": {
+    "status": "unknown",
+    "weekly": null,
+    "last_entry": null,
+    "closed_on_holidays": false,
+    "notes": "Orari delle visite guidate non verificati: l'unica fonte trovata è del 2020, quindi non la riporto.",
+    "source": null
+   },
+   "tickets": null,
+   "basis": {
+    "description": "general_knowledge",
+    "address": "secondary",
+    "coordinates": "approximate"
+   }
+  },
+  {
+   "id": "galleria_umberto",
+   "name": "Galleria Umberto I",
+   "aliases": [
+    "galleria umberto",
+    "galleria umberto i"
+   ],
+   "categories": [
+    "gallery"
+   ],
+   "neighborhood": "Municipio",
+   "address": "Via San Carlo, Napoli",
+   "lat": 40.8383,
+   "lon": 14.2492,
+   "indoor": "covered",
+   "description": "Galleria commerciale in ferro e vetro di fine Ottocento, con pianta a croce e grande cupola, di fronte al Teatro di San Carlo.",
+   "highlights": [
+    "Cupola in vetro",
+    "Pavimento a mosaico"
+   ],
+   "hours": {
+    "status": "open_air",
+    "weekly": null,
+    "last_entry": null,
+    "closed_on_holidays": false,
+    "notes": "Luogo all'aperto o di passaggio: non risulta un orario d'ingresso. L'accesso può essere limitato di notte o in occasione di eventi.",
+    "source": null
+   },
+   "tickets": null,
+   "basis": {
+    "description": "general_knowledge",
+    "address": "general_knowledge",
+    "coordinates": "approximate"
+   }
+  },
+  {
+   "id": "castel_dell_ovo",
+   "name": "Castel dell'Ovo",
+   "aliases": [
+    "castel dell ovo",
+    "castel dell'ovo",
+    "castello dell ovo"
+   ],
+   "categories": [
+    "castle",
+    "panorama"
+   ],
+   "neighborhood": "Borgo Santa Lucia",
+   "address": "Via Eldorado 1, 80132 Napoli",
+   "lat": 40.8281,
+   "lon": 14.2477,
+   "indoor": "partial",
+   "description": "Il castello più antico di Napoli, sull'isolotto di Megaride, legato alla leggenda dell'uovo che Virgilio avrebbe nascosto nelle fondamenta. La struttura attuale è medievale e ha origine nella villa romana di Lucullo.",
+   "highlights": [
+    "Terrazze panoramiche sul golfo",
+    "Borgo Marinari"
+   ],
+   "hours": {
+    "status": "unknown",
+    "weekly": null,
+    "last_entry": null,
+    "closed_on_holidays": false,
+    "notes": "La scheda ufficiale del Ministero della Cultura (aggiornata nel 2022) non riporta orari. Una fonte giornalistica parla di accesso libero senza prenotazione, un sito non ufficiale di chiusura per lavori: lo stato attuale è da verificare.",
+    "source": null
+   },
+   "tickets": null,
+   "basis": {
+    "description": "general_knowledge",
+    "address": "official",
+    "coordinates": "approximate"
+   }
+  },
+  {
+   "id": "duomo",
+   "name": "Duomo di Napoli (Cattedrale di Santa Maria Assunta)",
+   "aliases": [
+    "duomo",
+    "cattedrale",
+    "duomo di napoli",
+    "cattedrale di napoli",
+    "san gennaro"
+   ],
+   "categories": [
+    "church"
+   ],
+   "neighborhood": "Centro storico",
+   "address": "Via Duomo 147, 80138 Napoli",
+   "lat": 40.8528,
+   "lon": 14.2587,
+   "indoor": "indoor",
+   "description": "La cattedrale di Napoli, di origine angioina (fine Duecento) con facciata ottocentesca. Custodisce la Cappella del Tesoro di San Gennaro, dove è conservato il sangue del santo, e la basilica paleocristiana di Santa Restituta.",
+   "highlights": [
+    "Cappella del Tesoro di San Gennaro",
+    "Basilica di Santa Restituta"
+   ],
+   "hours": {
+    "status": "official",
+    "weekly": {
+     "mon": [
+      [
+       "08:30",
+       "13:30"
+      ],
+      [
+       "14:30",
+       "19:30"
+      ]
+     ],
+     "tue": [
+      [
+       "08:30",
+       "13:30"
+      ],
+      [
+       "14:30",
+       "19:30"
+      ]
+     ],
+     "wed": [
+      [
+       "08:30",
+       "13:30"
+      ],
+      [
+       "14:30",
+       "19:30"
+      ]
+     ],
+     "thu": [
+      [
+       "08:30",
+       "13:30"
+      ],
+      [
+       "14:30",
+       "19:30"
+      ]
+     ],
+     "fri": [
+      [
+       "08:30",
+       "13:30"
+      ],
+      [
+       "14:30",
+       "19:30"
+      ]
+     ],
+     "sat": [
+      [
+       "08:30",
+       "13:30"
+      ],
+      [
+       "14:30",
+       "19:30"
+      ]
+     ],
+     "sun": [
+      [
+       "08:00",
+       "13:00"
+      ],
+      [
+       "16:30",
+       "19:30"
+      ]
+     ]
+    },
+    "last_entry": null,
+    "closed_on_holidays": false,
+    "notes": "Orari della cattedrale. La stessa fonte indica anche un percorso di visita (MuDD) tutti i giorni 9:30-17:00. Per la Cappella e il Museo del Tesoro di San Gennaro non ho orari. Le celebrazioni possono limitare le visite.",
+    "source": {
+     "name": "Regione Campania - Via Duomo Strada dei Musei",
+     "type": "official",
+     "url": "https://cultura.regione.campania.it/web/via-duomo-strada-dei-musei/duomo-di-napoli",
+     "as_of": null,
+     "retrieved": "2026-11-14"
+    }
+   },
+   "tickets": {
+    "info": "Cattedrale: ingresso gratuito secondo la fonte.",
+    "source": {
+     "name": "Regione Campania - Via Duomo Strada dei Musei",
+     "type": "official",
+     "url": "https://cultura.regione.campania.it/web/via-duomo-strada-dei-musei/duomo-di-napoli",
+     "as_of": null,
+     "retrieved": "2026-11-14"
+    }
+   },
+   "basis": {
+    "description": "general_knowledge",
+    "address": "official",
+    "coordinates": "approximate"
+   }
+  },
+  {
+   "id": "cappella_sansevero",
+   "name": "Cappella Sansevero (Cristo velato)",
+   "aliases": [
+    "cappella sansevero",
+    "sansevero",
+    "cristo velato",
+    "museo cappella sansevero"
+   ],
+   "categories": [
+    "museum",
+    "church"
+   ],
+   "neighborhood": "Centro storico",
+   "address": "Via Francesco De Sanctis 19/21, 80134 Napoli",
+   "lat": 40.8486,
+   "lon": 14.2547,
+   "indoor": "indoor",
+   "description": "Cappella gentilizia trasformata nel Settecento da Raimondo di Sangro, principe di Sansevero. È famosa per il Cristo velato di Giuseppe Sanmartino (1753), con altre sculture come la Pudicizia e il Disinganno.",
+   "highlights": [
+    "Cristo velato di Sanmartino",
+    "Pudicizia",
+    "Disinganno"
+   ],
+   "hours": {
+    "status": "secondary",
+    "weekly": {
+     "mon": [
+      [
+       "09:00",
+       "19:00"
+      ]
+     ],
+     "tue": [],
+     "wed": [
+      [
+       "09:00",
+       "19:00"
+      ]
+     ],
+     "thu": [
+      [
+       "09:00",
+       "19:00"
+      ]
+     ],
+     "fri": [
+      [
+       "09:00",
+       "19:00"
+      ]
+     ],
+     "sat": [
+      [
+       "09:00",
+       "20:30"
+      ]
+     ],
+     "sun": [
+      [
+       "09:00",
+       "19:00"
+      ]
+     ]
+    },
+    "last_entry": null,
+    "closed_on_holidays": false,
+    "notes": "",
+    "source": {
+     "name": "museionline.info (elenco di musei)",
+     "type": "secondary",
+     "url": "https://www.museionline.info/napoli-musei-e-monumenti/museo-cappella-sansevero",
+     "as_of": "2024-07-16",
+     "retrieved": "2026-11-14"
+    }
+   },
+   "tickets": null,
+   "basis": {
+    "description": "general_knowledge",
+    "address": "secondary",
+    "coordinates": "approximate"
+   }
+  },
+  {
+   "id": "mann",
+   "name": "Museo Archeologico Nazionale di Napoli (MANN)",
+   "aliases": [
+    "mann",
+    "museo archeologico",
+    "museo archeologico nazionale",
+    "museo archeologico di napoli"
+   ],
+   "categories": [
+    "museum"
+   ],
+   "neighborhood": "Centro storico",
+   "address": "Piazza Museo Nazionale 19, 80135 Napoli",
+   "lat": 40.8535,
+   "lon": 14.2505,
+   "indoor": "indoor",
+   "description": "Uno dei più importanti musei archeologici del mondo. Conserva la collezione Farnese e i reperti di Pompei ed Ercolano, tra cui il Mosaico di Alessandro. Ha sede in un palazzo cinquecentesco.",
+   "highlights": [
+    "Mosaico di Alessandro",
+    "Collezione Farnese",
+    "Reperti di Pompei ed Ercolano"
+   ],
+   "hours": {
+    "status": "secondary",
+    "weekly": {
+     "mon": [
+      [
+       "09:00",
+       "19:30"
+      ]
+     ],
+     "tue": [],
+     "wed": [
+      [
+       "09:00",
+       "19:30"
+      ]
+     ],
+     "thu": [
+      [
+       "09:00",
+       "19:30"
+      ]
+     ],
+     "fri": [
+      [
+       "09:00",
+       "19:30"
+      ]
+     ],
+     "sat": [
+      [
+       "09:00",
+       "19:30"
+      ]
+     ],
+     "sun": [
+      [
+       "09:00",
+       "19:30"
+      ]
+     ]
+    },
+    "last_entry": null,
+    "closed_on_holidays": false,
+    "notes": "",
+    "source": {
+     "name": "museionline.info (elenco di musei)",
+     "type": "secondary",
+     "url": "https://www.museionline.info/napoli-musei-e-monumenti/museo-archeologico-nazionale-di-napoli",
+     "as_of": "2024-02-17",
+     "retrieved": "2026-11-14"
+    }
+   },
+   "tickets": null,
+   "basis": {
+    "description": "general_knowledge",
+    "address": "secondary",
+    "coordinates": "approximate"
+   }
+  },
+  {
+   "id": "certosa_san_martino",
+   "name": "Certosa e Museo di San Martino",
+   "aliases": [
+    "certosa di san martino",
+    "certosa",
+    "san martino",
+    "museo di san martino"
+   ],
+   "categories": [
+    "museum",
+    "monastery",
+    "panorama"
+   ],
+   "neighborhood": "Vomero",
+   "address": "Largo San Martino 5, 80129 Napoli",
+   "lat": 40.8438,
+   "lon": 14.2397,
+   "indoor": "partial",
+   "description": "Ex monastero certosino sulla collina del Vomero, fondato nel Trecento e trasformato in forme barocche nel Seicento. Ospita un museo con una celebre sezione di presepi e offre una vista panoramica sul golfo.",
+   "highlights": [
+    "Presepe Cuciniello",
+    "Chiostro Grande",
+    "Panorama sul golfo"
+   ],
+   "hours": {
+    "status": "secondary",
+    "weekly": {
+     "mon": [
+      [
+       "08:30",
+       "18:30"
+      ]
+     ],
+     "tue": [
+      [
+       "08:30",
+       "18:30"
+      ]
+     ],
+     "wed": [],
+     "thu": [
+      [
+       "08:30",
+       "18:30"
+      ]
+     ],
+     "fri": [
+      [
+       "08:30",
+       "18:30"
+      ]
+     ],
+     "sat": [
+      [
+       "08:30",
+       "18:30"
+      ]
+     ],
+     "sun": [
+      [
+       "08:30",
+       "18:30"
+      ]
+     ]
+    },
+    "last_entry": null,
+    "closed_on_holidays": false,
+    "notes": "",
+    "source": {
+     "name": "museionline.info (elenco di musei)",
+     "type": "secondary",
+     "url": "https://www.museionline.info/napoli-musei-e-monumenti/certosa-di-san-martino",
+     "as_of": "2024-09-06",
+     "retrieved": "2026-11-14"
+    }
+   },
+   "tickets": null,
+   "basis": {
+    "description": "general_knowledge",
+    "address": "secondary",
+    "coordinates": "approximate"
+   }
+  },
+  {
+   "id": "san_gregorio_armeno",
+   "name": "Via San Gregorio Armeno",
+   "aliases": [
+    "san gregorio armeno",
+    "via san gregorio armeno",
+    "via dei presepi"
+   ],
+   "categories": [
+    "street"
+   ],
+   "neighborhood": "Centro storico",
+   "address": "Via San Gregorio Armeno, 80138 Napoli",
+   "lat": 40.8505,
+   "lon": 14.2581,
+   "indoor": "outdoor",
+   "description": "La strada degli artigiani del presepe, nel centro storico: botteghe di statuine e scenografie natalizie aperte tutto l'anno.",
+   "highlights": [
+    "Botteghe di presepi",
+    "Chiesa di San Gregorio Armeno"
+   ],
+   "hours": {
+    "status": "open_air",
+    "weekly": null,
+    "last_entry": null,
+    "closed_on_holidays": false,
+    "notes": "Luogo all'aperto o di passaggio: non risulta un orario d'ingresso. L'accesso può essere limitato di notte o in occasione di eventi.",
+    "source": null
+   },
+   "tickets": null,
+   "basis": {
+    "description": "general_knowledge",
+    "address": "general_knowledge",
+    "coordinates": "approximate"
+   }
+  },
+  {
+   "id": "spaccanapoli",
+   "name": "Spaccanapoli",
+   "aliases": [
+    "spaccanapoli",
+    "decumano inferiore",
+    "via benedetto croce"
+   ],
+   "categories": [
+    "street"
+   ],
+   "neighborhood": "Centro storico",
+   "address": "Via Benedetto Croce / Via San Biagio dei Librai, Napoli",
+   "lat": 40.848,
+   "lon": 14.255,
+   "indoor": "outdoor",
+   "description": "Il lungo rettilineo che attraversa il centro storico, sull'antico decumano inferiore, e lo \"spacca\" in due. Lungo il percorso si incontrano chiese, palazzi e botteghe.",
+   "highlights": [
+    "Chiese e palazzi storici",
+    "Botteghe artigiane"
+   ],
+   "hours": {
+    "status": "open_air",
+    "weekly": null,
+    "last_entry": null,
+    "closed_on_holidays": false,
+    "notes": "Luogo all'aperto o di passaggio: non risulta un orario d'ingresso. L'accesso può essere limitato di notte o in occasione di eventi.",
+    "source": null
+   },
+   "tickets": null,
+   "basis": {
+    "description": "general_knowledge",
+    "address": "general_knowledge",
+    "coordinates": "approximate"
+   }
+  },
+  {
+   "id": "lungomare_caracciolo",
+   "name": "Lungomare Caracciolo e Villa Comunale",
+   "aliases": [
+    "lungomare",
+    "lungomare caracciolo",
+    "via caracciolo",
+    "villa comunale"
+   ],
+   "categories": [
+    "seafront",
+    "panorama"
+   ],
+   "neighborhood": "Chiaia",
+   "address": "Via Francesco Caracciolo / Riviera di Chiaia, Napoli",
+   "lat": 40.833,
+   "lon": 14.233,
+   "indoor": "outdoor",
+   "description": "La passeggiata sul mare di Napoli, con vista su Vesuvio e Castel dell'Ovo, accanto al giardino pubblico della Villa Comunale, nato alla fine del Settecento.",
+   "highlights": [
+    "Vista sul Vesuvio",
+    "Villa Comunale"
+   ],
+   "hours": {
+    "status": "open_air",
+    "weekly": null,
+    "last_entry": null,
+    "closed_on_holidays": false,
+    "notes": "Luogo all'aperto o di passaggio: non risulta un orario d'ingresso. L'accesso può essere limitato di notte o in occasione di eventi.",
+    "source": null
+   },
+   "tickets": null,
+   "basis": {
+    "description": "general_knowledge",
+    "address": "general_knowledge",
+    "coordinates": "approximate"
+   }
+  }
+ ],
+ "areas": [
+  {
+   "name": "Piazza Garibaldi",
+   "aliases": [
+    "garibaldi",
+    "stazione centrale",
+    "napoli centrale"
+   ],
+   "lat": 40.853,
+   "lon": 14.2705
+  },
+  {
+   "name": "Municipio",
+   "aliases": [
+    "piazza municipio",
+    "municipio"
+   ],
+   "lat": 40.8392,
+   "lon": 14.2528
+  },
+  {
+   "name": "Toledo",
+   "aliases": [
+    "via toledo",
+    "toledo"
+   ],
+   "lat": 40.8396,
+   "lon": 14.249
+  },
+  {
+   "name": "Mergellina",
+   "aliases": [
+    "mergellina"
+   ],
+   "lat": 40.8285,
+   "lon": 14.221
+  },
+  {
+   "name": "Chiaia",
+   "aliases": [
+    "chiaia",
+    "piazza dei martiri"
+   ],
+   "lat": 40.833,
+   "lon": 14.24
+  },
+  {
+   "name": "Vomero",
+   "aliases": [
+    "vomero"
+   ],
+   "lat": 40.844,
+   "lon": 14.233
+  },
+  {
+   "name": "Centro storico",
+   "aliases": [
+    "centro storico",
+    "decumani"
+   ],
+   "lat": 40.85,
+   "lon": 14.255
+  },
+  {
+   "name": "Fuorigrotta",
+   "aliases": [
+    "fuorigrotta",
+    "stadio maradona"
+   ],
+   "lat": 40.8279,
+   "lon": 14.193
+  }
+ ]
+}
